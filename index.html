@@ -385,10 +385,11 @@ function renderPhases(){
     const dl=dB(now,end);let cls='active',txt='';
     if(now>end){cls='done';txt='✅ انتهت المدة المحددة'}
     else txt=`⏳ المدة القصوى تنتهي بعد ${dl} يوم (${fD(end)})`;
-    let pi=0,pd=0;allI().forEach(i=>{if(i.phase===p.id){pi++;if(gIS(i.id).status==='completed')pd++}});
+    let pi=0,pd=0,progSum=0;allI().forEach(i=>{if(i.phase===p.id){pi++;const st=gIS(i.id);progSum+=(st.progress||0);if(st.status==='completed')pd++}});
+    const phasePct=pi?Math.round(progSum/pi):0;
     return `<div class="pc ${cls}"><div class="pt">${p.name}</div><div class="ps">${p.sub} — ${p.dur}</div>
-      <div class="ptm">${txt}</div><div class="ps">${pd}/${pi} مبادرة مكتملة</div>
-      <div class="pp"><div class="ppf" style="width:${pct}%"></div></div></div>`;
+      <div class="ptm">${txt}</div><div class="ps">${pd}/${pi} مبادرة مكتملة — إنجاز المرحلة ${phasePct}%</div>
+      <div class="pp" title="نسبة إنجاز مبادرات المرحلة"><div class="ppf" style="width:${phasePct}%"></div></div></div>`;
   }).join('');
 }
 

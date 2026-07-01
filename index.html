@@ -1,201 +1,496 @@
 <!DOCTYPE html>
 <!--
-  لوحة المتابعة — النسخة الثابتة المرجعية
-  البرنامج الحكومي لحماية الأسرة والطفولة — وزارة العدل
-  تاريخ الإعداد المرجعي: 12 مايو 2026 — 7:14 مساءً (بتوقيت الكويت)
-  هذه النسخة الأصلية المبسّطة المعتمدة للرجوع إليها دائمًا.
+  لوحة المتابعة — إعادة هيكلة كاملة (Command Center Concept)
+  البرنامج الحكومي لحماية الأسرة — وزارة العدل
+  ملاحظة: تحافظ حرفيًا على كامل البيانات والمنطق والمصطلحات؛
+  التغيير في الهيكلة والعرض البصري فقط. نسخ بديلة محفوظة: dashboard.html / dashboard.redesign.html
 -->
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة متابعة البرنامج الحكومي لحماية الأسرة</title>
+<title>مركز قيادة البرنامج الحكومي لحماية الأسرة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--primary:#1a5276;--primary-light:#2980b9;--success:#27ae60;--warning:#f39c12;--danger:#e74c3c;--info:#3498db;--bg:#f5f7fa;--card:#fff;--text:#2c3e50;--text-muted:#7f8c8d;--border:#e0e6ed;--shadow:0 2px 12px rgba(0,0,0,.08)}
+:root{
+  color-scheme:dark;
+  --bg:#0A1622;--bg-2:#0D1E30;--panel:#122539;--panel-2:#16304A;--elev:#1B3A57;
+  --line:#22405C;--line-2:#2C4E6E;
+  --ink:#EAF2FA;--ink-2:#9DB3CA;--ink-3:#6C84A0;
+  --brand:#3BA5B0;--brand-2:#57C6D1;--gold:#D8B15A;
+  --success:#2FBB7D;--success-bg:rgba(47,187,125,.14);
+  --warning:#E0A93B;--warning-bg:rgba(224,169,59,.14);
+  --danger:#E56A5F;--danger-bg:rgba(229,106,95,.15);
+  --info:#4C9BD6;--info-bg:rgba(76,155,214,.14);
+  /* legacy aliases */
+  --primary:var(--brand);--primary-light:var(--brand-2);--card:var(--panel);--surface:var(--panel);--surface-2:var(--panel-2);
+  --text:var(--ink);--text-muted:var(--ink-2);--border:var(--line);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 18px 40px -24px rgba(0,0,0,.7);
+  --r:16px;--r-sm:12px;--r-xs:8px;
+  --side:248px;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;line-height:1.6;padding:12px;font-size:13px}
-h1{font-size:1.3em;color:var(--primary)}h2{font-size:1.05em;color:var(--primary);margin-bottom:10px}h3{font-size:.92em;color:var(--primary-light);margin-bottom:6px}
-.header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:18px 22px;border-radius:12px;margin-bottom:14px}
-.header h1{color:#fff;font-size:1.25em}.header .sub{color:rgba(255,255,255,.8);font-size:.82em;margin-bottom:4px}
-.hinfo{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;font-size:.8em}
-.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px;margin-bottom:14px}
-.sc{background:var(--card);border-radius:10px;padding:12px;text-align:center;box-shadow:var(--shadow);border-top:3px solid var(--primary);transition:transform .2s}
-.sc:hover{transform:translateY(-2px)}.sc.g{border-top-color:var(--success)}.sc.y{border-top-color:var(--warning)}.sc.r{border-top-color:var(--danger)}.sc.b{border-top-color:var(--info)}
-.sn{font-size:1.7em;font-weight:700;line-height:1.2}.sl{font-size:.75em;color:var(--text-muted);margin-top:2px}
-.card{background:var(--card);border-radius:12px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
-.phases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
-.pc{background:var(--bg);border-radius:10px;padding:12px;border-right:4px solid var(--primary)}
-.pc.active{border-right-color:var(--success);background:#eafaf1}.pc.done{border-right-color:var(--success);background:#d5f5e3;opacity:.85}
-.pt{font-weight:700;font-size:.92em}.ps{font-size:.78em;color:var(--text-muted)}.ptm{font-size:.85em;font-weight:600;color:var(--primary);margin-top:4px}
-.pp{height:5px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden}.ppf{height:100%;border-radius:3px;background:var(--success);transition:width .5s}
-.tabs{display:flex;gap:3px;margin-bottom:12px;flex-wrap:wrap;overflow-x:auto}
-.tab{padding:7px 12px;border:none;background:var(--card);border-radius:8px 8px 0 0;cursor:pointer;font-size:.8em;font-family:inherit;color:var(--text-muted);transition:all .2s;border-bottom:2px solid transparent;white-space:nowrap}
-.tab:hover{color:var(--text)}.tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
-.tc{display:none}.tc.active{display:block}
-.cat-sec{background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px}
-.cat-hdr{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:3px 0}
-.badge{background:var(--primary);color:#fff;padding:2px 9px;border-radius:12px;font-size:.75em}
-.cat-body{margin-top:10px}.cat-body.collapsed{display:none}
-.init{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:8px;border-right:3px solid var(--border);transition:all .2s}
-.init.status-not-started{border-right-color:var(--text-muted)}.init.status-in-progress{border-right-color:var(--warning)}.init.status-completed{border-right-color:var(--success)}.init.status-delayed{border-right-color:var(--danger)}
-.ih{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
-.inum{font-size:.72em;background:var(--primary);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
-.ititle{font-weight:600;font-size:.88em;flex:1}
-.ist{font-size:.7em;padding:2px 7px;border-radius:10px;white-space:nowrap}
-.ist.not-started{background:#ecf0f1;color:var(--text-muted)}.ist.in-progress{background:#fef9e7;color:#d68910}.ist.completed{background:#eafaf1;color:#1e8449}.ist.delayed{background:#fdedec;color:#c0392b}
-.imeta{display:flex;gap:8px;margin-top:5px;font-size:.73em;color:var(--text-muted);flex-wrap:wrap}
-.ipb{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}.ipf{height:100%;border-radius:2px;transition:width .3s}
-.kpi-sec{margin-top:6px;padding:6px 8px;background:rgba(26,82,118,.04);border-radius:5px;border-right:2px solid var(--info)}
-.kpi-t{font-size:.72em;font-weight:600;color:var(--info);margin-bottom:3px}
-.kpi-item{font-size:.75em;line-height:1.6}
-.kpi-val{color:var(--success);margin-right:4px;font-weight:600}
-/* Subtasks */
-.subtasks{margin-top:8px;padding-right:16px;border-right:2px dashed var(--border)}
-.subtask{display:flex;align-items:center;gap:6px;padding:5px 8px;background:#fff;border-radius:6px;margin-bottom:4px;font-size:.82em}
-.subtask.done{opacity:.6}.subtask.done .st-text{text-decoration:line-through}
-.st-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--success)}.st-text{flex:1}
-.st-deadline{font-size:.72em;color:var(--text-muted)}.st-deadline.overdue{color:var(--danger);font-weight:600}
-.st-members{display:flex;gap:2px;flex-wrap:wrap}
-.member-chip{font-size:.68em;background:var(--primary);color:#fff;padding:1px 6px;border-radius:8px;display:inline-block}
-.member-chip.removable{cursor:pointer}.member-chip.removable:hover{background:var(--danger)}
-.st-del{cursor:pointer;color:var(--text-muted);font-size:.8em}.st-del:hover{color:var(--danger)}
-.add-subtask-row{display:flex;gap:4px;margin-top:6px}
-.add-subtask-row input,.add-subtask-row select{padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:.8em;direction:rtl}
-.add-subtask-row input{flex:1}
-/* Assigned members on init */
-.init-members{margin-top:4px;display:flex;gap:3px;flex-wrap:wrap}
-/* Actions */
-.iact{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
-.btn{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.78em;transition:all .2s}
-.btn-sm{padding:3px 8px;font-size:.72em}
-.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-light)}
-.btn-success{background:var(--success);color:#fff}.btn-warning{background:var(--warning);color:#fff}
-.btn-danger{background:var(--danger);color:#fff}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{background:var(--bg)}
-/* Team */
-.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
-.team-card{background:var(--bg);border-radius:10px;padding:12px;border-right:3px solid var(--primary)}
-.team-name{font-weight:700;font-size:.95em}.team-role{font-size:.78em;color:var(--text-muted)}
-.team-tasks{margin-top:8px;font-size:.8em}
-.team-task-item{padding:4px 0;border-bottom:1px solid var(--border)}
-.team-task-item:last-child{border-bottom:none}
-/* Tasks */
-.task-input-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.task-input-row input,.task-input-row select{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl}
-.task-input-row input{flex:1;min-width:140px}
-.task-item{display:flex;align-items:center;gap:6px;padding:8px;background:var(--bg);border-radius:8px;margin-bottom:5px}
-.task-item.done{opacity:.6}.task-item.done .task-text{text-decoration:line-through}
-.task-cb{width:17px;height:17px;cursor:pointer;accent-color:var(--success)}.task-text{flex:1;font-size:.85em}
-.task-pri{font-size:.68em;padding:2px 6px;border-radius:8px}.task-pri.high{background:#fdedec;color:var(--danger)}.task-pri.medium{background:#fef9e7;color:var(--warning)}.task-pri.low{background:#eafaf1;color:var(--success)}
-.task-del{cursor:pointer;color:var(--text-muted);font-size:.83em}.task-del:hover{color:var(--danger)}
-/* Timeline */
-.timeline{position:relative;padding:6px 22px 6px 0}.timeline::before{content:'';position:absolute;right:7px;top:0;bottom:0;width:2px;background:var(--border)}
-.tl-item{position:relative;padding:0 22px 16px 0}.tl-item::before{content:'';position:absolute;right:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--primary);border:2px solid #fff;box-shadow:0 0 0 2px var(--primary)}
-.tl-item.done::before{background:var(--success);box-shadow:0 0 0 2px var(--success)}.tl-item.current::before{background:var(--warning);box-shadow:0 0 0 2px var(--warning);animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 2px var(--warning)}50%{box-shadow:0 0 0 6px rgba(243,156,18,.3)}}
-.tl-date{font-size:.75em;color:var(--text-muted)}.tl-title{font-weight:600;font-size:.88em}.tl-desc{font-size:.8em;color:var(--text-muted)}
-.notes-area{width:100%;min-height:90px;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:.85em;direction:rtl;resize:vertical;margin-top:6px}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,Arial,sans-serif;
+  background:
+    radial-gradient(900px 500px at 100% 0%,rgba(59,165,176,.10),transparent 55%),
+    radial-gradient(800px 500px at 0% 100%,rgba(216,177,90,.06),transparent 55%),
+    var(--bg);
+  color:var(--ink);direction:rtl;line-height:1.6;font-size:13.5px;-webkit-font-smoothing:antialiased;min-height:100vh}
+h2{font-size:1.02em;color:var(--ink);margin-bottom:14px;letter-spacing:-.01em}
+h3{font-size:.9em;color:var(--brand-2);margin-bottom:6px;font-weight:600}
+.num-t{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px;border-radius:4px}
+input,select,textarea{color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:9px;font-family:inherit}
+select option{background:var(--panel)}
 
-.report-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-.report-toolbar select,.report-toolbar input{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl}
-.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px}
-.report-stat{background:var(--bg);border-radius:10px;padding:10px;border-right:3px solid var(--primary)}
-.report-stat .num{font-size:1.45em;font-weight:800;color:var(--primary);line-height:1.1}.report-stat .lbl{font-size:.76em;color:var(--text-muted)}
-.report-section{background:var(--bg);border-radius:10px;padding:12px;margin:10px 0;border-right:3px solid var(--info)}
-.report-section h3{margin-bottom:8px}.report-list{padding-right:18px;font-size:.86em}.report-list li{margin-bottom:6px}
-.report-preview{white-space:pre-wrap;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.86em;line-height:1.8;max-height:360px;overflow:auto}
-.report-note{width:100%;min-height:80px;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:.85em;direction:rtl;resize:vertical}
+/* ===== App layout ===== */
+.app{display:flex;min-height:100vh}
+.sidebar{width:var(--side);flex-shrink:0;position:sticky;top:0;align-self:flex-start;height:100vh;
+  background:linear-gradient(180deg,var(--bg-2),var(--bg) 60%);border-inline-start:1px solid var(--line);
+  display:flex;flex-direction:column;padding:18px 14px;gap:6px;overflow-y:auto}
+.side-brand{display:flex;align-items:center;gap:11px;padding:6px 8px 14px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.side-crest{width:46px;height:46px;flex-shrink:0;display:grid;place-items:center;border:1.4px solid rgba(216,177,90,.5);
+  border-radius:13px;background:linear-gradient(160deg,rgba(59,165,176,.12),rgba(255,255,255,.02))}
+.side-crest svg{width:28px;height:28px}
+.side-crest.has-logo{width:56px;height:56px;background:transparent;border:none;border-radius:0}
+.side-crest .crest-img{width:100%;height:100%;object-fit:contain;display:block}
+.side-brand-t{font-size:.7em;color:var(--gold);letter-spacing:.1em;font-weight:600}
+.side-brand-n{font-size:.86em;font-weight:700;color:var(--ink);line-height:1.4;margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:3px;flex:1}
+.tab{display:flex;align-items:center;gap:11px;width:100%;text-align:right;padding:11px 13px;border:none;
+  background:transparent;border-radius:11px;cursor:pointer;font-family:inherit;font-size:.86em;color:var(--ink-2);
+  font-weight:500;transition:all .16s ease;position:relative}
+.tab svg{width:19px;height:19px;flex-shrink:0;opacity:.85}
+.tab:hover{background:var(--panel);color:var(--ink)}
+.tab.active{background:linear-gradient(135deg,rgba(59,165,176,.22),rgba(59,165,176,.06));color:var(--brand-2);font-weight:600}
+.tab.active::before{content:'';position:absolute;right:0;top:22%;bottom:22%;width:3px;border-radius:4px;background:var(--brand-2)}
+.side-foot{border-top:1px solid var(--line);padding-top:14px;margin-top:6px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.side-prog{display:flex;flex-direction:column;align-items:center;gap:6px}
+.side-prog-l{font-size:.72em;color:var(--ink-2)}
+.side-time{font-size:.7em;color:var(--ink-3);text-align:center;line-height:1.6}
+
+.main{flex:1;min-width:0;padding:20px 24px 30px;display:flex;flex-direction:column}
+.mtop{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.mtop-l{display:flex;flex-direction:column}
+.view-title{font-size:1.4em;font-weight:700;color:var(--ink);letter-spacing:-.02em}
+.view-crumb{font-size:.76em;color:var(--ink-2)}
+.mtop-r{display:flex;gap:9px;flex-wrap:wrap}
+.mchip{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:8px 13px;min-width:120px}
+.mchip-l{display:block;font-size:.66em;color:var(--ink-3);letter-spacing:.03em}
+.mchip-v{display:block;font-size:.82em;font-weight:600;margin-top:2px;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ===== Alerts ===== */
+.dal{background:var(--warning-bg);border:1px solid rgba(224,169,59,.3);color:#F0C87A;border-radius:12px;
+  padding:11px 14px;margin-bottom:10px;font-size:.84em}
+.dal.danger{background:var(--danger-bg);border-color:rgba(229,106,95,.35);color:#F2A199}
+.dal strong{color:inherit}
+#alerts:not(:empty){margin-bottom:6px}
+
+/* ===== Views ===== */
+.tc{display:none;animation:fade .25s ease}.tc.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ===== Stats strip ===== */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:linear-gradient(160deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:14px 15px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;transition:transform .18s,border-color .18s}
+.stat:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.stat::after{content:'';position:absolute;inset:0 auto 0 0;width:3px;background:var(--brand)}
+.stat.success::after{background:var(--success)}.stat.warning::after{background:var(--warning)}
+.stat.danger::after{background:var(--danger)}.stat.info::after{background:var(--info)}.stat.muted::after{background:var(--ink-3)}
+.stat-ic{width:40px;height:40px;flex-shrink:0;border-radius:11px;display:grid;place-items:center;color:var(--brand);background:rgba(59,165,176,.12)}
+.stat.success .stat-ic{color:var(--success);background:var(--success-bg)}
+.stat.warning .stat-ic{color:var(--warning);background:var(--warning-bg)}
+.stat.danger .stat-ic{color:var(--danger);background:var(--danger-bg)}
+.stat.info .stat-ic{color:var(--info);background:var(--info-bg)}
+.stat.muted .stat-ic{color:var(--ink-2);background:rgba(157,179,202,.12)}
+.stat-ic svg{width:21px;height:21px}
+.stat-num{font-size:1.65em;font-weight:700;line-height:1.05;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat-lbl{font-size:.75em;color:var(--ink-2);margin-top:2px}
+
+/* ===== Overview grid & panels ===== */
+.ov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.panel{background:linear-gradient(165deg,var(--panel),var(--bg-2));border:1px solid var(--line);
+  border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.panel.span2{grid-column:span 2}.panel.span-all{grid-column:1/-1}
+.panel-h{font-size:.9em;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.panel-h::before{content:'';width:4px;height:15px;border-radius:3px;background:var(--brand)}
+
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.donut-c{position:relative;width:150px;height:150px;flex-shrink:0}
+.donut-c svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dc-v{font-size:1.9em;font-weight:800;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.dc-l{font-size:.72em;color:var(--ink-2);margin-top:3px}
+.legend{display:flex;flex-direction:column;gap:9px;flex:1;min-width:140px}
+.lg{display:flex;align-items:center;gap:9px;font-size:.82em}
+.lg-dot{width:11px;height:11px;border-radius:4px;flex-shrink:0}
+.lg-l{color:var(--ink-2);flex:1}.lg-v{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* Ring */
+.ring{position:relative;display:inline-grid;place-items:center}
+.ring svg{transform:rotate(-90deg)}
+.ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ring-v{font-weight:800;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}
+.ring-l{font-size:.62em;color:var(--ink-2);margin-top:2px}
+.center-ring{display:flex;justify-content:center;padding:6px 0}
+.ov-sub{text-align:center;font-size:.8em;color:var(--ink-2);margin-top:10px}
+
+/* Horizontal bars */
+.bars{display:flex;flex-direction:column;gap:13px}
+.hb-top{display:flex;justify-content:space-between;font-size:.82em;margin-bottom:5px}
+.hb-top span:first-child{color:var(--ink)}
+.hb-v{font-weight:700;color:var(--brand-2);font-variant-numeric:tabular-nums}
+.hb-track{height:9px;background:var(--bg);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.hb-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--brand),var(--brand-2));transition:width .5s ease}
+
+/* Phases */
+.phases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.phase{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 15px;position:relative;overflow:hidden}
+.phase::before{content:'';position:absolute;top:0;bottom:0;right:0;width:4px;background:var(--brand)}
+.phase.done::before{background:var(--success)}
+.phase-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.phase-idx{width:28px;height:28px;flex-shrink:0;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:.86em;color:#04222A;background:var(--brand);font-variant-numeric:tabular-nums}
+.phase.done .phase-idx{background:var(--success);color:#042818}
+.phase-name{font-weight:700;font-size:.92em;color:var(--ink)}
+.phase-sub{font-size:.75em;color:var(--ink-2)}
+.phase-chip{margin-inline-start:auto;font-size:.68em;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--info-bg);color:var(--info);white-space:nowrap}
+.phase.done .phase-chip{background:var(--success-bg);color:var(--success)}
+.phase-meta{font-size:.77em;color:var(--ink-2);margin-bottom:9px;min-height:2.4em}
+.phase-stat{display:flex;justify-content:space-between;align-items:center;font-size:.77em;color:var(--ink-2);margin-bottom:6px}
+.phase-pct{font-weight:700;color:var(--brand-2);font-variant-numeric:tabular-nums}
+.bar{height:7px;background:var(--bg);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--brand),var(--brand-2));transition:width .5s}
+.phase.done .bar-fill{background:linear-gradient(90deg,var(--success),#57D6A0)}
+
+/* ===== Filter bar ===== */
+.filterbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.segmented{display:inline-flex;gap:3px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg{padding:7px 13px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:inherit;font-size:.8em;color:var(--ink-2);font-weight:600;transition:all .15s}
+.seg:hover{color:var(--ink)}
+.seg.active{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#04222A}
+.filterbar select{padding:8px 12px;font-size:.83em}
+
+/* ===== Initiative cards ===== */
+.phase-band{background:linear-gradient(135deg,var(--brand),#2C7E88);color:#052227;padding:10px 16px;border-radius:11px;
+  margin:18px 0 12px;font-weight:700;font-size:.9em;box-shadow:0 10px 24px -14px rgba(59,165,176,.6)}
+.phase-band:first-child{margin-top:0}
+.cat-block{margin-bottom:20px}
+.cat-hdr2{display:flex;align-items:center;gap:10px;margin-bottom:11px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.cat-hdr2 .cn{font-weight:700;font-size:.98em;color:var(--ink)}
+.cat-hdr2 .cm{font-size:.76em;color:var(--ink-2);margin-inline-start:auto}
+.badge{background:var(--brand);color:#04222A;padding:3px 11px;border-radius:20px;font-size:.74em;font-weight:700;font-variant-numeric:tabular-nums}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:13px}
+.icard{background:linear-gradient(165deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:14px;
+  padding:15px 16px;position:relative;overflow:hidden;transition:border-color .18s,transform .18s}
+.icard:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.icard::before{content:'';position:absolute;top:0;right:0;left:0;height:3px;background:var(--ink-3)}
+.icard.status-in-progress::before{background:var(--warning)}
+.icard.status-completed::before{background:var(--success)}
+.icard.status-delayed::before{background:var(--danger)}
+.icard-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:9px}
+.icard-head-l{display:flex;flex-direction:column;gap:7px;align-items:flex-start}
+.inum{font-size:.74em;font-weight:700;background:var(--brand);color:#04222A;min-width:26px;height:24px;padding:0 7px;border-radius:8px;
+  display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.ist{font-size:.7em;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.ist.not-started{background:rgba(157,179,202,.15);color:var(--ink-2)}
+.ist.in-progress{background:var(--warning-bg);color:var(--warning)}
+.ist.completed{background:var(--success-bg);color:var(--success)}
+.ist.delayed{background:var(--danger-bg);color:var(--danger)}
+.icard-title{font-weight:600;font-size:.92em;color:var(--ink);line-height:1.5;margin-bottom:5px}
+.icard-desc{font-size:.77em;color:var(--ink-2);line-height:1.6;margin-bottom:8px}
+.icard-wide{grid-column:1/-1}
+.laws{margin:8px 0 4px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.laws-t{grid-column:1/-1;font-size:.76em;font-weight:700;color:var(--gold);margin-bottom:2px}
+.law{display:flex;gap:9px;background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+.law-n{flex-shrink:0;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:.72em;font-weight:700;
+  color:var(--gold);background:rgba(216,177,90,.12);border:1px solid rgba(216,177,90,.28);font-variant-numeric:tabular-nums}
+.law-t{font-size:.8em;font-weight:600;color:var(--ink);line-height:1.5}
+.law-d{font-size:.72em;color:var(--ink-2);line-height:1.6;margin-top:3px}
+.imeta{display:flex;gap:12px;font-size:.74em;color:var(--ink-2);flex-wrap:wrap;align-items:center;margin-top:6px}
+.imeta .over{color:var(--danger);font-weight:600}
+.init-members{margin-top:8px;display:flex;gap:4px;flex-wrap:wrap}
+.member-chip{font-size:.68em;background:rgba(59,165,176,.18);color:var(--brand-2);border:1px solid rgba(59,165,176,.3);padding:2px 9px;border-radius:20px;display:inline-block;font-weight:500}
+.member-chip.removable{cursor:pointer}.member-chip.removable:hover{background:var(--danger-bg);color:var(--danger)}
+.kpi-sec{margin-top:10px;padding:10px 12px;background:var(--info-bg);border:1px solid rgba(76,155,214,.22);border-radius:10px}
+.kpi-t{font-size:.72em;font-weight:700;color:var(--info);margin-bottom:5px}
+.kpi-item{font-size:.76em;line-height:1.7;color:var(--ink-2)}
+.kpi-val{color:var(--success);margin-right:4px;font-weight:700}
+
+/* Subtasks */
+.subtasks{margin-top:10px;padding-right:12px;border-right:2px solid var(--line-2)}
+.subtask{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;margin-bottom:5px;font-size:.81em}
+.subtask.done{opacity:.55}.subtask.done .st-text{text-decoration:line-through}
+.st-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--success)}.st-text{flex:1;color:var(--ink)}
+.st-deadline{font-size:.72em;color:var(--ink-2)}.st-deadline.overdue{color:var(--danger);font-weight:600}
+.st-members{display:flex;gap:3px;flex-wrap:wrap}
+.st-del{cursor:pointer;color:var(--ink-3);font-size:.85em}.st-del:hover{color:var(--danger)}
+
+/* Actions & buttons */
+.iact{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.btn{padding:7px 15px;border:none;border-radius:9px;cursor:pointer;font-family:inherit;font-size:.8em;font-weight:600;transition:all .15s}
+.btn:active{transform:translateY(1px)}
+.btn-sm{padding:5px 11px;font-size:.74em}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#04222A}
+.btn-success{background:var(--success);color:#042818}
+.btn-warning{background:var(--warning);color:#2A1E04}
+.btn-danger{background:var(--danger);color:#2A0806}
+.btn-outline{background:transparent;border:1px solid var(--line-2);color:var(--ink-2)}
+.btn-outline:hover{background:var(--panel);border-color:var(--brand);color:var(--brand-2)}
+.empty{text-align:center;padding:40px;color:var(--ink-2)}
+
+/* Cards for other views */
+.card{background:linear-gradient(165deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:14px}
+
+/* Team */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:13px;margin-top:12px}
+.team-card{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;position:relative;overflow:hidden}
+.team-card::before{content:'';position:absolute;top:0;bottom:0;right:0;width:4px;background:var(--brand)}
+.team-name{font-weight:700;font-size:.94em;color:var(--ink)}.team-role{font-size:.76em;color:var(--ink-2)}
+.team-tasks{margin-top:9px;font-size:.8em}
+.team-task-item{padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink-2)}
+.team-task-item:last-child{border-bottom:none}
+.team-task-item strong{color:var(--ink)}
+
+/* Tasks */
+.task-input-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.task-input-row input,.task-input-row select{padding:8px 11px;font-size:.83em;direction:rtl}
+.task-input-row input{flex:1;min-width:150px}
+.task-item{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--bg-2);border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+.task-item.done{opacity:.55}.task-item.done .task-text{text-decoration:line-through}
+.task-cb{width:17px;height:17px;cursor:pointer;accent-color:var(--success)}.task-text{flex:1;font-size:.85em;color:var(--ink)}
+.task-pri{font-size:.68em;font-weight:600;padding:3px 9px;border-radius:20px}
+.task-pri.high{background:var(--danger-bg);color:var(--danger)}
+.task-pri.medium{background:var(--warning-bg);color:var(--warning)}
+.task-pri.low{background:var(--success-bg);color:var(--success)}
+.task-del{cursor:pointer;color:var(--ink-3);font-size:.85em}.task-del:hover{color:var(--danger)}
+
+/* Timeline */
+.timeline{position:relative;padding:6px 24px 6px 0}
+.timeline::before{content:'';position:absolute;right:8px;top:0;bottom:0;width:2px;background:var(--line-2)}
+.tl-item{position:relative;padding:0 24px 18px 0}
+.tl-item::before{content:'';position:absolute;right:-24px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--panel);border:2px solid var(--brand);box-shadow:0 0 0 3px rgba(59,165,176,.15)}
+.tl-item.done::before{background:var(--success);border-color:var(--success)}
+.tl-date{font-size:.74em;color:var(--ink-3)}.tl-title{font-weight:600;font-size:.88em;color:var(--ink)}.tl-desc{font-size:.79em;color:var(--ink-2)}
+.notes-area{width:100%;min-height:120px;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:inherit;font-size:.86em;direction:rtl;resize:vertical;margin-top:6px;background:var(--bg-2)}
+
+/* Reports */
+.report-toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.report-toolbar select,.report-toolbar input{padding:8px 11px;font-size:.83em;direction:rtl}
+.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.report-stat{background:var(--bg-2);border:1px solid var(--line);border-radius:11px;padding:12px 14px;position:relative;overflow:hidden}
+.report-stat::before{content:'';position:absolute;top:0;bottom:0;right:0;width:3px;background:var(--brand)}
+.report-stat .num{font-size:1.5em;font-weight:800;color:var(--brand-2);line-height:1.1;font-variant-numeric:tabular-nums}
+.report-stat .lbl{font-size:.76em;color:var(--ink-2);margin-top:2px}
+.report-section{background:var(--bg-2);border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin:11px 0}
+.report-list{padding-right:18px;font-size:.86em;color:var(--ink-2)}.report-list li{margin-bottom:6px}.report-list strong{color:var(--ink)}
+.report-preview{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:14px;font-size:.86em;line-height:1.9;max-height:380px;overflow:auto;color:var(--ink)}
+.report-note{width:100%;min-height:90px;border:1px solid var(--line);border-radius:10px;padding:11px;font-family:inherit;font-size:.85em;direction:rtl;resize:vertical;background:var(--bg-2)}
+
+/* KPI table */
+.kpi-table{width:100%;border-collapse:collapse;font-size:.8em;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.kpi-table td{color:var(--ink)}
+
 /* Modal */
-.mo{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center}.mo.show{display:flex}
-.modal{background:var(--card);border-radius:12px;padding:20px;width:92%;max-width:520px;max-height:85vh;overflow-y:auto;direction:rtl}
-.fg{margin-bottom:10px}.fg label{display:block;font-size:.83em;margin-bottom:3px;font-weight:600}
-.fg input,.fg select,.fg textarea{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl}
-.factions{display:flex;gap:6px;margin-top:14px}
-.dal{background:#fef9e7;border:1px solid #f9e79f;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:.83em}
-.dal.danger{background:#fdedec;border-color:#f5b7b1}
-@media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}.phases-grid{grid-template-columns:1fr}.task-input-row{flex-direction:column}}
+.mo{display:none;position:fixed;inset:0;background:rgba(3,10,18,.7);z-index:1000;justify-content:center;align-items:center;backdrop-filter:blur(3px)}
+.mo.show{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;width:92%;max-width:540px;max-height:86vh;overflow-y:auto;direction:rtl;box-shadow:0 30px 70px -20px rgba(0,0,0,.8)}
+.modal h3{color:var(--brand-2);font-size:1.02em;margin-bottom:14px}
+.fg{margin-bottom:12px}.fg label{display:block;font-size:.83em;margin-bottom:4px;font-weight:600;color:var(--ink)}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 11px;font-size:.83em;direction:rtl}
+.factions{display:flex;gap:8px;margin-top:16px}
+
+@media(max-width:980px){
+  .app{flex-direction:column}
+  .sidebar{width:auto;height:auto;position:sticky;top:0;z-index:50;flex-direction:row;align-items:center;gap:10px;padding:10px 12px;
+    border-inline-start:none;border-bottom:1px solid var(--line);overflow-x:auto}
+  .side-brand{border-bottom:none;margin:0;padding:0 10px 0 0;border-inline-end:1px solid var(--line)}
+  .side-brand-n{display:none}
+  .nav{flex-direction:row;flex:none}
+  .tab{width:auto;white-space:nowrap;padding:9px 12px}
+  .tab.active::before{display:none}
+  .side-foot{display:none}
+  .ov-grid{grid-template-columns:1fr}
+  .panel.span2{grid-column:auto}
+}
+@media(max-width:560px){.stats-row{grid-template-columns:repeat(2,1fr)}.main{padding:16px 14px}.task-input-row{flex-direction:column}}
+
+/* ===== VIEWER (read-only public/team view) ===== */
+body.viewer .iact,
+body.viewer .subtasks>.btn,
+body.viewer .task-input-row,
+body.viewer .team-add,
+body.viewer .side-foot>.btn,
+body.viewer .report-toolbar .btn-primary,
+body.viewer .st-del,
+body.viewer .task-del,
+body.viewer .team-card .btn-danger{display:none!important}
+body.viewer .st-cb,body.viewer .task-cb{pointer-events:none;opacity:.85}
+body.viewer .notes-area,body.viewer .report-note{pointer-events:none;opacity:.9}
+.ro-badge{font-size:.66em;font-weight:700;color:#04222A;background:var(--gold);padding:2px 10px;border-radius:20px;margin-inline-start:8px;white-space:nowrap}
 </style>
 </head>
-<body>
-<div class="header">
-  <h1>📊 لوحة متابعة البرنامج الحكومي لحماية الأسرة</h1>
-  <div class="sub">وزارة العدل — 24 مبادرة | خطة 2026–2029</div>
-  <div class="hinfo">
-    <div>⏱️ <span id="mainTimer"></span></div>
-    <div>📅 <span id="todayDate"></span></div>
-    <div>🚀 تاريخ الإطلاق: 12 مايو 2026</div>
-  </div>
+<body class="viewer">
+<div class="app">
+  <aside class="sidebar">
+    <div class="side-brand">
+      <div class="side-crest" id="sideCrest">
+        <svg class="crest-svg" viewBox="0 0 40 44" fill="none" stroke="#D8B15A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 2 4 8v12c0 10 7 16 16 21 9-5 16-11 16-21V8L20 2Z"/>
+          <path d="M20 13v15"/><path d="M13 17h14"/>
+          <path d="M13 17l-2.4 5.2a3 3 0 0 0 5.2 0L13 17Z"/>
+          <path d="M27 17l-2.4 5.2a3 3 0 0 0 5.2 0L27 17Z"/>
+          <path d="M16.5 30h7"/>
+        </svg>
+      </div>
+      <div>
+        <div class="side-brand-t">وزارة العدل</div>
+        <div class="side-brand-n">حماية الأسرة</div>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <div class="side-prog"><div id="sideProg"></div><div class="side-prog-l">الإنجاز الكلي</div></div>
+      <div class="side-time" id="sideTime">—</div>
+      <button class="btn btn-outline btn-sm" style="width:100%" onclick="exportPublishData()">⬇ تصدير بيانات النشر</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="mtop">
+      <div class="mtop-l">
+        <div class="view-title" id="viewTitle">نظرة عامة</div>
+        <div class="view-crumb">البرنامج الحكومي لحماية الأسرة • وزارة العدل • 24 مبادرة • خطة 2026–2029 <span class="ro-badge">عرض الفريق — قراءة فقط</span></div>
+        <div class="view-crumb" id="dataUpdated" style="margin-top:3px;color:var(--ink-3)"></div>
+      </div>
+      <div class="mtop-r">
+        <div class="mchip"><span class="mchip-l">الوقت المتبقي</span><span class="mchip-v" id="mainTimer">—</span></div>
+        <div class="mchip"><span class="mchip-l">التاريخ</span><span class="mchip-v" id="todayDate">—</span></div>
+        <div class="mchip"><span class="mchip-l">تاريخ الإطلاق</span><span class="mchip-v">12 مايو 2026</span></div>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <div class="tc active" id="tab-overview">
+      <div id="alerts"></div>
+      <div class="stats-row" id="statsRow"></div>
+      <div class="ov-grid">
+        <div class="panel span2">
+          <div class="panel-h">توزيع حالة المبادرات</div>
+          <div class="donut-wrap">
+            <div class="donut-c"><div id="chartStatus"></div>
+              <div class="donut-center"><div class="dc-v num-t" id="donutTotal">0</div><div class="dc-l">مبادرة</div></div>
+            </div>
+            <div class="legend" id="statusLegend"></div>
+          </div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-h">مؤشر الإنجاز الكلي</div>
+          <div id="chartOverall" class="center-ring"></div>
+          <div class="ov-sub" id="overallSub"></div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-h">إنجاز الفئات</div>
+          <div id="chartCats" class="bars"></div>
+        </div>
+        <div class="panel span2">
+          <div class="panel-h">مراحل التنفيذ</div>
+          <div class="phases-grid" id="phasesGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Initiatives -->
+    <div class="tc" id="tab-initiatives">
+      <div class="filterbar">
+        <div class="segmented" id="iFilter">
+          <button class="seg if active" data-f="all">الكل</button>
+          <button class="seg if" data-f="not-started">لم تبدأ</button>
+          <button class="seg if" data-f="in-progress">قيد التنفيذ</button>
+          <button class="seg if" data-f="completed">مكتملة</button>
+          <button class="seg if" data-f="delayed">متأخرة</button>
+        </div>
+        <select id="iCatSel"><option value="all">كل الفئات</option></select>
+      </div>
+      <div id="catCont"></div>
+    </div>
+
+    <!-- Team -->
+    <div class="tc" id="tab-team">
+      <div class="card">
+        <h2>إدارة فريق العمل</h2>
+        <div class="team-add" style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">
+          <input id="tmName" placeholder="اسم العضو" style="flex:1;min-width:130px;padding:8px 11px;font-size:.83em;direction:rtl">
+          <input id="tmRole" placeholder="المسمى الوظيفي (اختياري)" style="flex:1;min-width:130px;padding:8px 11px;font-size:.83em;direction:rtl">
+          <button class="btn btn-primary" onclick="addMember()">إضافة عضو</button>
+        </div>
+        <div class="team-grid" id="teamGrid"></div>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="tc" id="tab-kpis"><div class="card"><h2>ملخص مؤشرات الأداء</h2><div id="kpiSumm"></div></div></div>
+
+    <!-- Reports -->
+    <div class="tc" id="tab-reports">
+      <div class="card">
+        <h2>التقارير الدورية لمجلس الوزراء</h2>
+        <div class="dal">
+          تُعد التقارير كل ثلاثة أشهر من تاريخ إطلاق البرنامج في 12 مايو 2026.
+          يمكن توليد التقرير من حالة المبادرات الحالية، ويحفظ النظام لقطة التقرير للمقارنة مع التقرير التالي.
+        </div>
+        <div class="report-toolbar">
+          <label style="font-weight:600;font-size:.84em">فترة التقرير</label>
+          <select id="reportSel"></select>
+          <button class="btn btn-primary" onclick="generateReport()">توليد/تحديث التقرير من الحالة الحالية</button>
+          <button class="btn btn-outline" onclick="copyReportText()">نسخ نص التقرير</button>
+          <button class="btn btn-outline" onclick="downloadReportText()">تنزيل TXT</button>
+        </div>
+        <div id="reportStatus" style="font-size:.8em;color:var(--text-muted);margin-bottom:8px"></div>
+        <div id="reportSummary"></div>
+        <div class="report-section">
+          <h3>ملاحظات تحريرية لهذا التقرير</h3>
+          <textarea class="report-note" id="reportCustomNotes" placeholder="أضف ملاحظات أو صياغة خاصة تُدرج في التقرير..." oninput="saveReportNotes()"></textarea>
+        </div>
+        <div class="report-section">
+          <h3>معاينة نص التقرير</h3>
+          <div class="report-preview" id="reportPreview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks -->
+    <div class="tc" id="tab-tasks">
+      <div class="card">
+        <h2>إدارة المهام</h2>
+        <div class="task-input-row">
+          <input type="text" id="taskInp" placeholder="أضف مهمة جديدة...">
+          <select id="taskPri"><option value="high">عاجل</option><option value="medium" selected>متوسط</option><option value="low">عادي</option></select>
+          <select id="taskCat"><option value="">جميع الفئات</option><option value="تشريعي">التشريعي</option><option value="رقمي">الرقمي</option><option value="حوكمة">الحوكمة</option><option value="توعية">التوعية</option><option value="بنية">البنية التحتية</option><option value="بيانات">البيانات</option><option value="عام">عام</option></select>
+          <select id="taskMember"><option value="">بدون إسناد</option></select>
+          <button class="btn btn-primary" onclick="addTask()">إضافة</button>
+        </div>
+        <div id="taskFilter" style="margin-bottom:10px;display:flex;gap:5px">
+          <button class="btn btn-sm btn-outline tf active" data-f="all">الكل</button>
+          <button class="btn btn-sm btn-outline tf" data-f="pending">قيد التنفيذ</button>
+          <button class="btn btn-sm btn-outline tf" data-f="done">مكتمل</button>
+        </div>
+        <div id="taskList"></div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="tc" id="tab-timeline"><div class="card"><h2>المسار الزمني</h2><div class="timeline" id="tlCont"></div></div></div>
+
+    <!-- Notes -->
+    <div class="tc" id="tab-notes"><div class="card"><h2>ملاحظات</h2><textarea class="notes-area" id="notesArea" placeholder="سجّل ملاحظاتك..."></textarea><div style="margin-top:6px;font-size:.75em;color:var(--text-muted)">آخر حفظ: <span id="notesST">—</span></div></div></div>
+  </main>
 </div>
-<div id="alerts"></div>
-<div class="stats-row" id="statsRow"></div>
-<div class="card"><h2>⏳ مراحل التنفيذ</h2><div class="phases-grid" id="phasesGrid"></div></div>
-<div class="tabs">
-  <button class="tab active" data-tab="initiatives">📋 المبادرات</button>
-  <button class="tab" data-tab="team">👥 الفريق</button>
-  <button class="tab" data-tab="kpis">📏 ملخص المؤشرات</button>
-  <button class="tab" data-tab="reports">📄 التقارير</button>
-  <button class="tab" data-tab="tasks">✅ المهام</button>
-  <button class="tab" data-tab="timeline">📅 المسار الزمني</button>
-  <button class="tab" data-tab="notes">📝 ملاحظات</button>
-</div>
-<div class="tc active" id="tab-initiatives"><div id="catCont"></div></div>
-<div class="tc" id="tab-team">
-  <div class="card">
-    <h2>👥 إدارة فريق العمل</h2>
-    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
-      <input id="tmName" placeholder="اسم العضو" style="flex:1;min-width:120px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl">
-      <input id="tmRole" placeholder="المسمى الوظيفي (اختياري)" style="flex:1;min-width:120px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl">
-      <button class="btn btn-primary" onclick="addMember()">إضافة عضو</button>
-    </div>
-    <div class="team-grid" id="teamGrid"></div>
-  </div>
-</div>
-<div class="tc" id="tab-kpis"><div class="card"><h2>📏 ملخص مؤشرات الأداء</h2><div id="kpiSumm"></div></div></div>
-<div class="tc" id="tab-reports">
-  <div class="card">
-    <h2>📄 التقارير الدورية لمجلس الوزراء</h2>
-    <div class="dal">
-      تُعد التقارير كل ثلاثة أشهر من تاريخ إطلاق البرنامج في 12 مايو 2026.
-      يمكن توليد التقرير من حالة المبادرات الحالية، ويحفظ النظام لقطة التقرير للمقارنة مع التقرير التالي.
-    </div>
-    <div class="report-toolbar">
-      <label style="font-weight:600;font-size:.84em">فترة التقرير</label>
-      <select id="reportSel"></select>
-      <button class="btn btn-primary" onclick="generateReport()">توليد/تحديث التقرير من الحالة الحالية</button>
-      <button class="btn btn-outline" onclick="copyReportText()">نسخ نص التقرير</button>
-      <button class="btn btn-outline" onclick="downloadReportText()">تنزيل TXT</button>
-    </div>
-    <div id="reportStatus" style="font-size:.8em;color:var(--text-muted);margin-bottom:8px"></div>
-    <div id="reportSummary"></div>
-    <div class="report-section">
-      <h3>ملاحظات تحريرية لهذا التقرير</h3>
-      <textarea class="report-note" id="reportCustomNotes" placeholder="أضف ملاحظات أو صياغة خاصة تُدرج في التقرير..." oninput="saveReportNotes()"></textarea>
-    </div>
-    <div class="report-section">
-      <h3>معاينة نص التقرير</h3>
-      <div class="report-preview" id="reportPreview"></div>
-    </div>
-  </div>
-</div>
-<div class="tc" id="tab-tasks">
-  <div class="card">
-    <h2>✅ إدارة المهام</h2>
-    <div class="task-input-row">
-      <input type="text" id="taskInp" placeholder="أضف مهمة جديدة...">
-      <select id="taskPri"><option value="high">عاجل</option><option value="medium" selected>متوسط</option><option value="low">عادي</option></select>
-      <select id="taskCat"><option value="">جميع الفئات</option><option value="تشريعي">التشريعي</option><option value="رقمي">الرقمي</option><option value="حوكمة">الحوكمة</option><option value="توعية">التوعية</option><option value="بنية">البنية التحتية</option><option value="بيانات">البيانات</option><option value="عام">عام</option></select>
-      <select id="taskMember"><option value="">بدون إسناد</option></select>
-      <button class="btn btn-primary" onclick="addTask()">إضافة</button>
-    </div>
-    <div id="taskFilter" style="margin-bottom:10px">
-      <button class="btn btn-sm btn-outline tf active" data-f="all">الكل</button>
-      <button class="btn btn-sm btn-outline tf" data-f="pending">قيد التنفيذ</button>
-      <button class="btn btn-sm btn-outline tf" data-f="done">مكتمل</button>
-    </div>
-    <div id="taskList"></div>
-  </div>
-</div>
-<div class="tc" id="tab-timeline"><div class="card"><h2>📅 المسار الزمني</h2><div class="timeline" id="tlCont"></div></div></div>
-<div class="tc" id="tab-notes"><div class="card"><h2>📝 ملاحظات</h2><textarea class="notes-area" id="notesArea" placeholder="سجّل ملاحظاتك..."></textarea><div style="margin-top:6px;font-size:.75em;color:var(--text-muted)">آخر حفظ: <span id="notesST">—</span></div></div></div>
 
 <!-- Edit Modal -->
 <div class="mo" id="editMo">
@@ -233,96 +528,121 @@ const PHASES=[
 const CATS=[
   {id:'legislative',name:'الإطار التشريعي',icon:'⚖️',dur:'6 أشهر إلى سنة',phase:'p2',
     initiatives:[
-      {id:'leg-1',num:1,name:'مراجعة وتطوير قانون إثبات النسب وتصحيح الأسماء',dur:'6 أشهر إلى سنة',phase:'p2',
+      {id:'leg-1',num:1,name:'مراجعة وتطوير التشريعات المعنية',dur:'6 أشهر إلى سنة',phase:'p2',
         kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
-        desc:'تحقيق الدعاوى والطلبات المتعلقة بالأنساب والأسماء والألقاب وصونها من العبث، والحيلولة دون التحايل على قوانين الجنسية والإقامة والتوظف.'},
-      {id:'leg-2',num:1,name:'مراجعة وتطوير قانون محكمة الأسرة',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
-        desc:'تنظيم إجراءات التقاضي في دعاوى الأحوال الشخصية، ومراعاة خصوصية المنازعات الأسرية، وضمان سرعة وفاعلية تنفيذ الأحكام.'},
-      {id:'leg-3',num:1,name:'مراجعة وتطوير قانون الأحوال الشخصية',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
-        desc:'تقرير الأحكام الموضوعية لمسائل الأحوال الشخصية والآثار المترتبة عليها، وترسيخ حقوق أفراد الأسرة.'},
-      {id:'leg-4',num:1,name:'مراجعة وتطوير قانون الحماية من العنف الأسري',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
-        desc:'تنظيم آليات مؤسسية لمكافحة جرائم العنف الأسري وكفالة الحماية القانونية اللازمة لضحاياها. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
-      {id:'leg-5',num:1,name:'مراجعة وتطوير قانون حقوق الطفل',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
-        desc:'كفالة رعاية الطفل وحمايته وصون حقوقه وضمان نشأته في بيئة آمنة وسليمة بما يحقق مصلحته الفضلى. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
-      {id:'leg-6',num:1,name:'مراجعة وتطوير قانون الأحداث',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
-        desc:'وقاية الحدث من الانحراف وعلاج المنحرف وإدماجه في المجتمع وضمان المعاملة الجنائية العادلة له. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
+        desc:'مراجعة وتطوير منظومة التشريعات المتصلة بحماية الأسرة، وتشمل القوانين التالية:',
+        laws:[
+          {t:'قانون تنظيم إجراءات دعاوى النسب وتصحيح الأسماء',d:'يُعنى بتحقيق الدعاوى والطلبات المتعلقة بالأنساب والأسماء والألقاب وصونها من العبث، والحيلولة دون التحايل على قوانين الجنسية والإقامة والتوظف ومنع التكسب غير المشروع من المزايا المالية أو العينية التي تقدمها الدولة.'},
+          {t:'قانون محكمة الأسرة',d:'ينظم إجراءات التقاضي في دعاوى الأحوال الشخصية، ويراعي خصوصية المنازعات الأسرية، ويوفر البيئة الملائمة لها، ويضمن سرعة وفاعلية تنفيذ الأحكام القضائية.'},
+          {t:'قانون الأحوال الشخصية',d:'يقرر الأحكام الموضوعية لمسائل الأحوال الشخصية والآثار المترتبة عليها، ويرسّخ حقوق أفراد الأسرة.'},
+          {t:'قانون الحماية من العنف الأسري',d:'ينظم آليات مؤسسية لمكافحة جرائم العنف الأسري ويكفل الحماية القانونية اللازمة لضحاياها. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
+          {t:'قانون حقوق الطفل',d:'يكفل رعاية الطفل وحمايته وصون حقوقه وضمان نشأته في بيئة آمنة وسليمة بما يحقق مصلحته الفضلى. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
+          {t:'قانون الأحداث',d:'يهدف إلى وقاية الحدث من الانحراف وعلاج المنحرف وإدماجه في المجتمع وضمان المعاملة الجنائية العادلة له. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
+          {t:'قانون حقوق الأشخاص ذوي الإعاقة',d:'يهدف إلى ضمان دمج الأشخاص ذوي الإعاقة في المجتمع بشكل كامل، وحماية حقوقهم من التمييز، عبر توفير تكافؤ الفرص في كافة المجالات مع تهيئة البيئة والخدمات لتناسب احتياجاتهم.'},
+        ]},
     ]
   },
-  {id:'digital',name:'التحول الرقمي',icon:'💻',dur:'3 أشهر إلى سنة',phase:'p2',
+  {id:'digital',name:'التحول الرقمي',icon:'💻',dur:'6 أشهر إلى سنة',phase:'p2',
     initiatives:[
-      {id:'dig-1',num:2,name:'تفعيل التقاضي الإلكتروني في المنازعات الأسرية',dur:'6 أشهر إلى سنة',phase:'p2',
+      {id:'dig-1',num:2,name:'تفعيل التقاضي الإلكتروني في المنازعات الأسرية عن بُعد',dur:'6 أشهر إلى سنة',phase:'p2',
         kpis:['نسبة التحول الرقمي','عدد الخدمات المدرجة','مدى سهولة الوصول']},
       {id:'dig-2',num:3,name:'توثيق مسائل الأحوال الشخصية إلكترونيًا',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['عدد السجلات المرقمنة','مدى سهولة الوصول','عدد الجهات بالربط الإلكتروني']},
+        kpis:['عدد السجلات المرقمنة','مدى سهولة الوصول','عدد الجهات المعنية بالربط الإلكتروني']},
       {id:'dig-3',num:4,name:'تقديم الاستشارات الأسرية والنفسية عن بُعد',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['عدد الجلسات الإلكترونية شهريًا','معدل رضا المستفيدين','متوسط وقت الانتظار']},
+        kpis:['عدد الجلسات الإلكترونية المُقدَّمة شهريًا','معدل رضا المستفيدين','متوسط وقت الانتظار للحصول على الخدمة']},
       {id:'dig-4',num:5,name:'طرح محتوى توعوي رقمي عبر المنصات الرسمية',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['عدد المحتويات المنشورة شهريًا','معدل التفاعل والوصول','عدد المتابعين']},
-      {id:'dig-5',num:6,name:'تفعيل الرؤية عن بُعد عبر منصة رسمية',dur:'6 أشهر إلى سنة',phase:'p2',
-        kpis:['عدد جلسات الرؤية الإلكترونية','نسبة تنفيذ أوامر الرؤية','معدل رضا المستخدمين']},
+        kpis:['عدد المحتويات التوعوية المنشورة شهريًا','معدل التفاعل والوصول','عدد المتابعين على المنصات الرسمية']},
+      {id:'dig-5',num:6,name:'تفعيل الرؤية عن بُعد عبر منصة رسمية لوزارة العدل',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد جلسات الرؤية الإلكترونية المُنفَّذة','نسبة تنفيذ أوامر الرؤية عبر المنصة','معدل رضا المستخدمين عن المنصة']},
     ]
   },
-  {id:'governance',name:'الحوكمة الإدارية والكفاءة المهنية',icon:'🏛️',dur:'3 أشهر إلى سنة',phase:'p1',
+  {id:'governance',name:'الحوكمة الإدارية والكفاءة المهنية',icon:'🏛️',dur:'3 إلى 6 أشهر',phase:'p1',
     initiatives:[
       {id:'gov-1',num:7,name:'إعداد دليل إرشادي ومرجع مهني موحَّد',dur:'3 إلى 6 أشهر',phase:'p1',
-        kpis:['إنجاز إصدار الدليل','عدد الموظفين المُدرَّبين','نسبة الالتزام بمعايير السلوك']},
+        kpis:['إنجاز إصدار الدليل في الموعد المحدد','عدد الموظفين المُدرَّبين على الدليل','نسبة الالتزام بمعايير السلوك الوظيفي']},
       {id:'gov-2',num:8,name:'ضبط معايير اعتماد الخبراء في الشأن الأسري',dur:'3 إلى 6 أشهر',phase:'p1',
-        kpis:['عدد الخبراء المعتمدين','نسبة الامتثال للمعايير','عدد الملاحظات ضد الخبراء']},
-      {id:'gov-3',num:9,name:'تنظيم شروط مزاولة مهنة الإرشاد الأسري',dur:'3 إلى 6 أشهر',phase:'p1',
-        kpis:['عدد المُرشدين المُرخَّصين','الشروط المهنية المُقنَّنة','نسبة الامتثال']},
-      {id:'gov-4',num:10,name:'برامج تدريبية لرفع كفاءة الموظفين',dur:'3 إلى 6 أشهر',phase:'p1',
-        kpis:['عدد الدورات سنويًا','نسبة الموظفين المستفيدين','معدل تحسن الأداء']},
-      {id:'gov-5',num:11,name:'تأهيل العاملين في مراكز الرؤية',dur:'3 إلى 6 أشهر',phase:'p1',
-        kpis:['عدد المؤهَّلين','نسبة تحسن التقييمات','عدد البرامج التطويرية']},
+        kpis:['عدد الخبراء المعتمدين وفق المعايير الجديدة','نسبة الامتثال للمعايير المعتمدة','عدد الملاحظات المُقدَّمة ضد الخبراء']},
+      {id:'gov-3',num:9,name:'تنظيم شروط مزاولة مهنة الإرشاد والتوجيه الأسري',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['عدد المُرشدين الأسريين المُرخَّصين','عدد الشروط المهنية المُقنَّنة','نسبة الامتثال لشروط مزاولة المهنة']},
+      {id:'gov-4',num:10,name:'برامج تدريبية متخصصة لرفع كفاءة الموظفين',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['عدد الدورات التدريبية المُنفَّذة سنويًا','نسبة الموظفين المستفيدين من التدريب','معدل تحسن الأداء الوظيفي بعد التدريب']},
+      {id:'gov-5',num:11,name:'تأهيل العاملين في مراكز الرؤية وتطوير مهاراتهم',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['عدد العاملين المؤهَّلين','نسبة تحسن تقييمات الأداء','عدد البرامج التطويرية المُنفَّذة']},
       {id:'gov-6',num:12,name:'ضمان تنفيذ أحكام الرؤية وفرض جزاءات رادعة',dur:'3 إلى 6 أشهر',phase:'p1',
-        kpis:['نسبة تنفيذ أحكام الرؤية','عدد الجزاءات المُطبَّقة','نسبة انخفاض الإخلال']},
-      {id:'gov-7',num:13,name:'تخصيص ميزانية من هيئة القصر وبرامج تأهيلية',dur:'3 إلى 6 أشهر',phase:'p1',
-        kpis:['حجم الميزانية من ريع الأثلاث','عدد البرامج المُستحدَثة','عدد الأطفال المستفيدين']},
+        kpis:['نسبة تنفيذ أحكام وأوامر الرؤية','عدد الجزاءات المُطبَّقة عند الإخلال','نسبة انخفاض حالات الإخلال بالتنفيذ']},
+      {id:'gov-7',num:13,name:'تخصيص ميزانية من الهيئة العامة لشئون القصر واستحداث برامج تأهيلية للقصر',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['حجم الميزانية المُخصَّصة من ريع الأثلاث الخيرية','عدد البرامج التأهيلية المُستحدَثة','عدد الأطفال القصَّر المستفيدين من البرامج']},
     ]
   },
-  {id:'awareness',name:'التوعية الوقائية',icon:'📢',dur:'3 أشهر إلى سنة',phase:'p2',
+  {id:'awareness',name:'التوعية الوقائية',icon:'📢',dur:'3 إلى 9 أشهر',phase:'p2',
     initiatives:[
       {id:'awa-1',num:14,name:'برامج تدريبية إلزامية للمقبلين على الزواج',dur:'3 إلى 9 أشهر',phase:'p2',
-        kpis:['عدد البرامج سنويًا','عدد المستفيدين','معدل رضا المشاركين']},
+        kpis:['عدد البرامج التدريبية المُنفَّذة سنويًا','عدد المستفيدين من برامج التأهيل الزواجي','معدل رضا المشاركين عن محتوى البرامج']},
       {id:'awa-2',num:15,name:'منظومة إرشاد زواجي في حالات النزاع',dur:'3 إلى 6 أشهر',phase:'p2',
-        kpis:['عدد الحالات المُعالجة','نسبة نجاح التدخل','عدد قنوات الاستشارة']},
+        kpis:['عدد الحالات الزوجية المُعالجة','نسبة نجاح التدخل الإرشادي','عدد قنوات الاستشارة المُتاحة']},
       {id:'awa-3',num:16,name:'جلسات توجيه وإرشاد أسري قبل تنفيذ الرؤية',dur:'3 إلى 9 أشهر',phase:'p2',
-        kpis:['عدد الجلسات شهريًا','نسبة المشاركة','معدل رضا المستفيدين']},
-      {id:'awa-4',num:17,name:'ندوات توجيه أسري في معهد الدراسات القضائية',dur:'3 إلى 6 أشهر',phase:'p2',
-        kpis:['عدد الندوات سنويًا','عدد المشاركين','تنوع الجمهور المستهدف']},
+        kpis:['عدد جلسات التوجيه المُقدَّمة شهريًا','نسبة المشاركة في الجلسات قبل الرؤية','معدل رضا المستفيدين عن جلسات التوجيه']},
+      {id:'awa-4',num:17,name:'برامج وندوات توجيه أسري في معهد الكويت للدراسات القضائية',dur:'3 إلى 6 أشهر',phase:'p2',
+        kpis:['عدد الندوات والبرامج المُنظَّمة سنويًا','عدد المشاركين','مدى تنوع الجمهور المستهدف']},
     ]
   },
   {id:'infrastructure',name:'البنية التحتية',icon:'🏗️',dur:'سنة إلى 3 سنوات',phase:'p3',
     initiatives:[
-      {id:'inf-1',num:18,name:'تطوير مراكز الرؤية وإنشاء مبانٍ نموذجية',dur:'سنة إلى 3 سنوات',phase:'p3',
-        kpis:['نسبة إنجاز المشاريع','عدد المراكز المُطوَّرة','نسبة رضا الأسر','المعايير البيئية للأطفال']},
-      {id:'inf-2',num:19,name:'تشييد مجمّع متكامل لمحكمة الأسرة',dur:'سنة إلى 3 سنوات',phase:'p3',
-        kpis:['نسبة إنجاز المجمّع','عدد الجهات المُدمجة','متوسط وقت الانتظار','نسبة رضا المستفيدين']},
+      {id:'inf-1',num:18,name:'تطوير مراكز الرؤية وإنشاء مبانٍ نموذجية للأطفال وأسرهم',dur:'سنة إلى 3 سنوات',phase:'p3',
+        kpis:['نسبة إنجاز المشاريع','عدد مراكز الرؤية المُطوَّرة أو المُنشأة','نسبة رضا الأسر عن بيئة المراكز','مدى توافر المعايير البيئية الملائمة للأطفال']},
+      {id:'inf-2',num:19,name:'تشييد مجمّع متكامل لمحكمة الأسرة يجمع كافة الجهات الحكومية',dur:'سنة إلى 3 سنوات',phase:'p3',
+        kpis:['نسبة إنجاز مشروع المجمّع','عدد الجهات والإدارات المُدمجة','متوسط وقت الانتظار','نسبة رضا المستفيدين']},
     ]
   },
   {id:'data',name:'استطلاع الرأي وتحليل البيانات',icon:'📊',dur:'3 أشهر إلى سنة',phase:'p2',
     initiatives:[
-      {id:'dat-1',num:20,name:'استبيانات وطنية رقمية لدعم البحث',dur:'3 أشهر إلى سنة',phase:'p2',
-        kpis:['عدد الاستبيانات المُنجزة','حجم عينة المشاركين','نسبة الاستفادة في صنع القرار']},
+      {id:'dat-1',num:20,name:'إعداد استبيانات وطنية رقمية لدعم البحث في شؤون الأسرة',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد الاستبيانات الوطنية المُنجزة','حجم عينة المشاركين في الاستبيانات','نسبة الاستفادة من نتائج البحوث في صنع القرار']},
       {id:'dat-2',num:21,name:'استطلاع آراء المتقاضين في محكمة الأسرة',dur:'3 أشهر إلى سنة',phase:'p2',
-        kpis:['نسبة رضا المتقاضين','عدد الملاحظات المُتابَعة','عدد التحسينات المُتخَّذة']},
+        kpis:['نسبة رضا المتقاضين عن خدمات المحكمة','عدد الملاحظات المُستلَمة والمُتابَعة','عدد التحسينات المُتخَّذة بناءً على نتائج الاستطلاع']},
       {id:'dat-3',num:22,name:'استبيان ملاحظات مراجعي مراكز الرؤية',dur:'3 أشهر إلى سنة',phase:'p2',
-        kpis:['نسبة رضا المراجعين','عدد الملاحظات المُتابَعة','عدد التحسينات']},
-      {id:'dat-4',num:23,name:'تقييم تجربة المستفيدين من الاستشارات الأسرية',dur:'3 أشهر إلى سنة',phase:'p2',
-        kpis:['معدل الرضا العام','عدد التقييمات الدورية','نسبة التحسن في الجودة']},
-      {id:'dat-5',num:24,name:'دراسة استقصائية للشباب المقبلين على الزواج',dur:'3 أشهر إلى سنة',phase:'p2',
-        kpis:['عدد المشاركين','نسبة الوعي قبل وبعد','رصد المعوقات']},
+        kpis:['نسبة رضا المراجعين عن خدمات مراكز الرؤية','عدد الملاحظات المُستلَمة والمُتابَعة','عدد التحسينات المُتخَّذة بناءً على نتائج الاستطلاع']},
+      {id:'dat-4',num:23,name:'تقييم تجربة المستفيدين من خدمات الاستشارات الأسرية',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['معدل الرضا العام عن خدمات الاستشارة الأسرية','عدد التقييمات المُجمَّعة دوريًا','نسبة التحسن في جودة الخدمة']},
+      {id:'dat-5',num:24,name:'دراسة استقصائية للشباب المقبلين على الزواج حول الوعي بالحقوق والمعوقات',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد المشاركين في الدراسة من الفئة المستهدفة','نسبة الوعي بالحقوق والواجبات الزوجية قبل وبعد البرامج','رصد المعوقات وتعدادها']},
     ]
   }
 ];
 
 const SL={'not-started':'لم تبدأ','in-progress':'قيد التنفيذ','completed':'مكتملة','delayed':'متأخرة'};
 const SC={'not-started':'#95a5a6','in-progress':'#f39c12','completed':'#27ae60','delayed':'#e74c3c'};
+const COL={brand:'#3BA5B0',brand2:'#57C6D1',success:'#2FBB7D',warning:'#E0A93B',danger:'#E56A5F',info:'#4C9BD6',muted:'#6C84A0',track:'#22405C'};
+
+// ===== ICONS =====
+const SIC={
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>',
+  users:'<circle cx="9" cy="9" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 6.5a3 3 0 0 1 0 6"/><path d="M15.5 20a6 6 0 0 0-2-4.4"/>',
+  gauge:'<path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-5"/>',
+  file:'<path d="M14 3v5h5"/><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-5Z"/><path d="M8 13h8M8 17h5"/>',
+  check:'<path d="M9 11l3 3L20 6"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  note:'<path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M8 9h8M8 13h8M8 17h4"/>',
+  layers:'<path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="M3 13l9 5 9-5"/>',
+  progress:'<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16"/>',
+  alert:'<path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 10v4"/><path d="M12 17.5v.01"/>',
+  circle:'<circle cx="12" cy="12" r="8"/>',
+  calendar:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>'
+};
+function icon(n){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${SIC[n]||''}</svg>`}
+
+const NAV=[
+  {t:'overview',l:'نظرة عامة',ic:'grid'},
+  {t:'initiatives',l:'المبادرات',ic:'list'},
+  {t:'team',l:'فريق العمل',ic:'users'},
+  {t:'kpis',l:'ملخص المؤشرات',ic:'gauge'},
+  {t:'reports',l:'التقارير الدورية',ic:'file'},
+  {t:'tasks',l:'إدارة المهام',ic:'check'},
+  {t:'timeline',l:'المسار الزمني',ic:'clock'},
+  {t:'notes',l:'الملاحظات',ic:'note'}
+];
+const TITLES={overview:'نظرة عامة',initiatives:'المبادرات',team:'فريق العمل',kpis:'ملخص المؤشرات',reports:'التقارير الدورية',tasks:'إدارة المهام',timeline:'المسار الزمني',notes:'الملاحظات'};
 
 // ===== STATE =====
 const K='fp3_';
@@ -360,36 +680,95 @@ function deadlineFor(init){
   return addM(LD,pdMax(init.dur));
 }
 
+// ===== CHART HELPERS (pure SVG) =====
+function ringSVG(pct,color,size,sw,label){
+  size=size||132;sw=sw||14;pct=Math.min(100,Math.max(0,pct));
+  const r=(size-sw)/2,C=2*Math.PI*r,len=C*pct/100,cx=size/2;
+  const vSize=Math.round(size*0.27);
+  return `<div class="ring" style="width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${COL.track}" stroke-width="${sw}"/>
+      <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${len} ${C-len}"/>
+    </svg>
+    <div class="ring-c"><div class="ring-v" style="font-size:${vSize}px">${pct}%</div>${label?`<div class="ring-l">${label}</div>`:''}</div>
+  </div>`;
+}
+function donutSVG(segs,size,sw){
+  size=size||150;sw=sw||22;
+  const total=segs.reduce((a,s)=>a+s.v,0),r=(size-sw)/2,C=2*Math.PI*r,cx=size/2;let off=0;
+  const arcs=total?segs.filter(s=>s.v>0).map(s=>{
+    const len=C*s.v/total;
+    const el=`<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${s.color}" stroke-width="${sw}" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}"/>`;
+    off+=len;return el;
+  }).join(''):`<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="${COL.track}" stroke-width="${sw}"/>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${arcs}</svg>`;
+}
+
 // ===== STATS =====
 function renderStats(){
   const all=allI();let c=0,ip=0,dl=0,ns=0,tp=0;
   all.forEach(i=>{const s=gIS(i.id);if(s.status==='completed')c++;else if(s.status==='in-progress')ip++;else if(s.status==='delayed')dl++;else ns++;tp+=(s.progress||0)});
   const pct=all.length?Math.round(tp/all.length):0;
   const el=dB(LD,new Date());
-  document.getElementById('statsRow').innerHTML=`
-    <div class="sc b"><div class="sn">${all.length}</div><div class="sl">إجمالي المبادرات</div></div>
-    <div class="sc g"><div class="sn">${c}</div><div class="sl">مكتملة</div></div>
-    <div class="sc y"><div class="sn">${ip}</div><div class="sl">قيد التنفيذ</div></div>
-    <div class="sc r"><div class="sn">${dl}</div><div class="sl">متأخرة</div></div>
-    <div class="sc"><div class="sn">${ns}</div><div class="sl">لم تبدأ</div></div>
-    <div class="sc b"><div class="sn">${pct}%</div><div class="sl">الإنجاز الكلي</div></div>
-    <div class="sc"><div class="sn">${el}</div><div class="sl">يوم منذ الإطلاق</div></div>
-    <div class="sc"><div class="sn">${gMembers().length}</div><div class="sl">أعضاء الفريق</div></div>`;
+  const cards=[
+    {ic:'layers',v:all.length,l:'إجمالي المبادرات',t:'brand'},
+    {ic:'check',v:c,l:'مكتملة',t:'success'},
+    {ic:'progress',v:ip,l:'قيد التنفيذ',t:'warning'},
+    {ic:'alert',v:dl,l:'متأخرة',t:'danger'},
+    {ic:'circle',v:ns,l:'لم تبدأ',t:'muted'},
+    {ic:'gauge',v:pct+'%',l:'الإنجاز الكلي',t:'info'},
+    {ic:'calendar',v:el,l:'يوم منذ الإطلاق',t:'muted'},
+    {ic:'users',v:gMembers().length,l:'أعضاء الفريق',t:'brand'}
+  ];
+  document.getElementById('statsRow').innerHTML=cards.map(x=>`
+    <div class="stat ${x.t}">
+      <div class="stat-ic">${icon(x.ic)}</div>
+      <div class="stat-body"><div class="stat-num">${x.v}</div><div class="stat-lbl">${x.l}</div></div>
+    </div>`).join('');
+}
+
+// ===== OVERVIEW =====
+function renderOverview(){
+  const all=allI();let c=0,ip=0,dl=0,ns=0,tp=0;
+  all.forEach(i=>{const s=gIS(i.id);if(s.status==='completed')c++;else if(s.status==='in-progress')ip++;else if(s.status==='delayed')dl++;else ns++;tp+=(s.progress||0)});
+  const pct=all.length?Math.round(tp/all.length):0;
+  // Donut
+  const segs=[{v:c,color:COL.success},{v:ip,color:COL.warning},{v:dl,color:COL.danger},{v:ns,color:COL.muted}];
+  document.getElementById('chartStatus').innerHTML=donutSVG(segs);
+  document.getElementById('donutTotal').textContent=all.length;
+  const legend=[{c:COL.success,l:'مكتملة',v:c},{c:COL.warning,l:'قيد التنفيذ',v:ip},{c:COL.danger,l:'متأخرة',v:dl},{c:COL.muted,l:'لم تبدأ',v:ns}];
+  document.getElementById('statusLegend').innerHTML=legend.map(x=>`<div class="lg"><span class="lg-dot" style="background:${x.c}"></span><span class="lg-l">${x.l}</span><span class="lg-v">${x.v}</span></div>`).join('');
+  // Overall ring
+  document.getElementById('chartOverall').innerHTML=ringSVG(pct,COL.brand2,160,16,'متوسط الإنجاز');
+  const now=new Date(),elapsed=dB(LD,now),left=Math.max(0,dB(now,PE));
+  document.getElementById('overallSub').innerHTML=`مضى <strong style="color:var(--ink)">${elapsed}</strong> يوم منذ الإطلاق • متبقٍ <strong style="color:var(--ink)">${left}</strong> يوم لنهاية البرنامج`;
+  // Category bars
+  document.getElementById('chartCats').innerHTML=CATS.map(cat=>{
+    const sts=cat.initiatives.map(i=>gIS(i.id));
+    const ap=sts.length?Math.round(sts.reduce((a,s)=>a+(s.progress||0),0)/sts.length):0;
+    return `<div class="hb"><div class="hb-top"><span>${cat.icon} ${cat.name}</span><span class="hb-v">${ap}%</span></div>
+      <div class="hb-track"><div class="hb-fill" style="width:${ap}%"></div></div></div>`;
+  }).join('');
 }
 
 // ===== PHASES =====
 function renderPhases(){
   const now=new Date();
-  document.getElementById('phasesGrid').innerHTML=PHASES.map(p=>{
+  document.getElementById('phasesGrid').innerHTML=PHASES.map((p,idx)=>{
     const end=addM(LD,p.endM),td=dB(LD,end),el=Math.max(0,Math.min(td,dB(LD,now))),pct=Math.round(el/td*100);
-    const dl=dB(now,end);let cls='active',txt='';
-    if(now>end){cls='done';txt='✅ انتهت المدة المحددة'}
-    else txt=`⏳ المدة القصوى تنتهي بعد ${dl} يوم (${fD(end)})`;
+    const dl=dB(now,end);let cls='active',txt='',chip='جارية';
+    if(now>end){cls='done';txt='انتهت المدة المحددة لهذه المرحلة';chip='منتهية'}
+    else txt=`المدة القصوى تنتهي بعد ${dl} يوم (${fD(end)})`;
     let pi=0,pd=0,progSum=0;allI().forEach(i=>{if(i.phase===p.id){pi++;const st=gIS(i.id);progSum+=(st.progress||0);if(st.status==='completed')pd++}});
     const phasePct=pi?Math.round(progSum/pi):0;
-    return `<div class="pc ${cls}"><div class="pt">${p.name}</div><div class="ps">${p.sub} — ${p.dur}</div>
-      <div class="ptm">${txt}</div><div class="ps">${pd}/${pi} مبادرة مكتملة — إنجاز المرحلة ${phasePct}%</div>
-      <div class="pp" title="نسبة إنجاز مبادرات المرحلة"><div class="ppf" style="width:${phasePct}%"></div></div></div>`;
+    return `<div class="phase ${cls}">
+      <div class="phase-top"><span class="phase-idx">${idx+1}</span>
+        <div><div class="phase-name">${p.name}</div><div class="phase-sub">${p.sub} • ${p.dur}</div></div>
+        <span class="phase-chip">${chip}</span></div>
+      <div class="phase-meta">${txt}</div>
+      <div class="phase-stat"><span>${pd}/${pi} مبادرة مكتملة</span><span class="phase-pct">${phasePct}%</span></div>
+      <div class="bar"><div class="bar-fill" style="width:${phasePct}%"></div></div>
+    </div>`;
   }).join('');
 }
 
@@ -408,83 +787,87 @@ function renderAlerts(){
   ).join('');
 }
 
-// ===== CATEGORIES - ordered by phase =====
+// ===== INITIATIVES (filtered card grid) =====
+let iStatus='all',iCat='all';
 function renderCats(){
-  // Sort categories by phase order
   const phaseOrder={'p1':0,'p2':1,'p3':2};
   const sorted=[...CATS].sort((a,b)=>(phaseOrder[a.phase]||0)-(phaseOrder[b.phase]||0));
   const phaseLabels={'p1':'المرحلة الأولى — التهيئة والإطلاق','p2':'المرحلة الثانية — التنفيذ الأساسي','p3':'المرحلة الثالثة — التعميق والاستدامة'};
   let html='',lastPhase='';
   sorted.forEach(cat=>{
-    if(cat.phase!==lastPhase){
+    if(iCat!=='all'&&cat.id!==iCat)return;
+    const items=cat.initiatives.filter(i=>iStatus==='all'||gIS(i.id).status===iStatus);
+    if(!items.length)return;
+    if(iCat==='all'&&cat.phase!==lastPhase){
       lastPhase=cat.phase;
-      html+=`<div style="background:var(--primary);color:#fff;padding:8px 14px;border-radius:8px;margin-bottom:8px;font-weight:700;font-size:.9em">📌 ${phaseLabels[cat.phase]}</div>`;
+      html+=`<div class="phase-band">${phaseLabels[cat.phase]}</div>`;
     }
     const sts=cat.initiatives.map(i=>gIS(i.id));
     const dn=sts.filter(s=>s.status==='completed').length;
     const ap=sts.length?Math.round(sts.reduce((a,s)=>a+(s.progress||0),0)/sts.length):0;
-    html+=`<div class="cat-sec"><div class="cat-hdr" onclick="toggleC('${cat.id}')">
-      <div><span>${cat.icon}</span> <strong>${cat.name}</strong>
-      <span style="font-size:.76em;color:var(--text-muted);margin-right:6px">📅 ${cat.dur} (${dn}/${cat.initiatives.length} — ${ap}%)</span></div>
-      <span class="badge">${cat.initiatives.length}</span></div>
-      <div class="cat-body" id="cat-${cat.id}">${cat.initiatives.map(i=>renderI(i)).join('')}</div></div>`;
+    html+=`<div class="cat-block">
+      <div class="cat-hdr2"><span style="font-size:1.2em">${cat.icon}</span><span class="cn">${cat.name}</span>
+        <span class="cm">${cat.dur} • ${dn}/${cat.initiatives.length} مكتملة • ${ap}%</span>
+        <span class="badge">${items.length}</span></div>
+      <div class="igrid">${items.map(i=>renderI(i)).join('')}</div></div>`;
   });
-  document.getElementById('catCont').innerHTML=html;
+  document.getElementById('catCont').innerHTML=html||'<div class="empty">لا توجد مبادرات مطابقة للتصفية الحالية.</div>';
 }
 
 function renderI(init){
   const s=gIS(init.id),st=gST(init.id),members=gMembers();
-  const pc=s.status==='completed'?'var(--success)':s.status==='delayed'?'var(--danger)':'var(--warning)';
+  const rc=s.status==='completed'?COL.success:s.status==='delayed'?COL.danger:s.status==='in-progress'?COL.warning:COL.muted;
   const dl=deadlineFor(init),dLeft=dB(new Date(),dl);
   let dlHint='';
   if(s.status!=='completed'){
-    if(dLeft<0)dlHint=`<span style="color:var(--danger);font-weight:600">⚠️ تجاوز بـ ${Math.abs(dLeft)} يوم</span>`;
-    else dlHint=`<span>⏰ متبقي ${dLeft} يوم</span>`;
+    if(dLeft<0)dlHint=`<span class="over">⚠️ تجاوز بـ ${Math.abs(dLeft)} يوم</span>`;
+    else dlHint=`<span>⏰ متبقٍ ${dLeft} يوم</span>`;
   }
-  // Assigned members
   const am=(s.members||[]).map(mid=>members.find(m=>m.id===mid)).filter(Boolean);
-  // Display number - use actual numbering for legislative sub-laws
-  const displayNum = init.id.startsWith('leg-') ? `1.${init.id.split('-')[1]}` : init.num;
+  const displayNum=init.num;
 
-  let h=`<div class="init status-${s.status}">
-    <div class="ih"><span class="inum">${displayNum}</span><div class="ititle">${init.name}</div><span class="ist ${s.status}">${SL[s.status]}</span></div>`;
-  if(init.desc)h+=`<div style="font-size:.78em;color:var(--text-muted);margin-top:4px;padding-right:26px">${init.desc}</div>`;
-  h+=`<div class="imeta"><span>📅 ${init.dur}</span><span>📊 ${s.progress||0}%</span>${dlHint}
-    ${s.deadline?`<span>🎯 موعد: ${fD(s.deadline)}</span>`:''}</div>`;
+  let h=`<div class="icard status-${s.status} ${init.laws?'icard-wide':''}">
+    <div class="icard-head">
+      <div class="icard-head-l"><span class="inum">${displayNum}</span><span class="ist ${s.status}">${SL[s.status]}</span></div>
+      ${ringSVG(s.progress||0,rc,62,7)}
+    </div>
+    <div class="icard-title">${init.name}</div>`;
+  if(init.desc)h+=`<div class="icard-desc">${init.desc}</div>`;
+  if(init.laws&&init.laws.length){
+    h+=`<div class="laws"><div class="laws-t">القوانين المشمولة بالمراجعة (${init.laws.length})</div>`;
+    init.laws.forEach((law,i)=>{
+      h+=`<div class="law"><span class="law-n">${i+1}</span><div class="law-b"><div class="law-t">${law.t}</div><div class="law-d">${law.d}</div></div></div>`;
+    });
+    h+=`</div>`;
+  }
+  h+=`<div class="imeta"><span>📅 ${init.dur}</span>${dlHint}${s.deadline?`<span>🎯 ${fD(s.deadline)}</span>`:''}</div>`;
   if(am.length)h+=`<div class="init-members">${am.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</div>`;
-  h+=`<div class="ipb"><div class="ipf" style="width:${s.progress||0}%;background:${pc}"></div></div>`;
-  // KPIs
-  h+=`<div class="kpi-sec"><div class="kpi-t">📏 مؤشرات الأداء</div>`;
+  h+=`<div class="kpi-sec"><div class="kpi-t">◆ مؤشرات الأداء</div>`;
   init.kpis.forEach((k,i)=>{
     const v=(s.kpiValues&&s.kpiValues[i])||'';
     h+=`<div class="kpi-item">◆ ${k} ${v?`<span class="kpi-val">[${v}]</span>`:''}</div>`;
   });
   h+=`</div>`;
-  // Subtasks
-  if(st.length||true){
-    h+=`<div class="subtasks">`;
-    st.forEach((sub,idx)=>{
-      const sdl=sub.deadline?new Date(sub.deadline):null;
-      const sdLeft=sdl?dB(new Date(),sdl):null;
-      const sdCls=sdLeft!==null&&sdLeft<0&&!sub.done?'overdue':'';
-      const subMembers=(sub.members||[]).map(mid=>members.find(m=>m.id===mid)).filter(Boolean);
-      h+=`<div class="subtask ${sub.done?'done':''}">
-        <input type="checkbox" class="st-cb" ${sub.done?'checked':''} onchange="toggleST('${init.id}',${idx})">
-        <span class="st-text">${sub.text}</span>
-        ${subMembers.length?`<span class="st-members">${subMembers.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</span>`:''}
-        ${sdl?`<span class="st-deadline ${sdCls}">${sdLeft!==null&&sdLeft<0&&!sub.done?'⚠️ تجاوز':'📅'} ${fD(sdl)}</span>`:''}
-        <span class="st-del" onclick="delST('${init.id}',${idx})">✕</span></div>`;
-    });
-    h+=`<button class="btn btn-sm btn-outline" onclick="openStMo('${init.id}')" style="margin-top:4px">+ إضافة فرع</button></div>`;
-  }
+  h+=`<div class="subtasks">`;
+  st.forEach((sub,idx)=>{
+    const sdl=sub.deadline?new Date(sub.deadline):null;
+    const sdLeft=sdl?dB(new Date(),sdl):null;
+    const sdCls=sdLeft!==null&&sdLeft<0&&!sub.done?'overdue':'';
+    const subMembers=(sub.members||[]).map(mid=>members.find(m=>m.id===mid)).filter(Boolean);
+    h+=`<div class="subtask ${sub.done?'done':''}">
+      <input type="checkbox" class="st-cb" ${sub.done?'checked':''} onchange="toggleST('${init.id}',${idx})">
+      <span class="st-text">${sub.text}</span>
+      ${subMembers.length?`<span class="st-members">${subMembers.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</span>`:''}
+      ${sdl?`<span class="st-deadline ${sdCls}">${sdLeft!==null&&sdLeft<0&&!sub.done?'⚠️ تجاوز':'📅'} ${fD(sdl)}</span>`:''}
+      <span class="st-del" onclick="delST('${init.id}',${idx})">✕</span></div>`;
+  });
+  h+=`<button class="btn btn-sm btn-outline" onclick="openStMo('${init.id}')" style="margin-top:4px">+ إضافة فرع</button></div>`;
   h+=`<div class="iact">
     <button class="btn btn-sm btn-primary" onclick="openEdit('${init.id}')">تحديث</button>
     ${s.status!=='completed'?`<button class="btn btn-sm btn-success" onclick="qDone('${init.id}')">إكمال ✓</button>`:''}
   </div></div>`;
   return h;
 }
-
-function toggleC(id){document.getElementById('cat-'+id).classList.toggle('collapsed')}
 
 // ===== SUBTASKS =====
 function toggleST(iid,idx){const st=gST(iid);st[idx].done=!st[idx].done;sST(iid,st);refreshAll()}
@@ -521,17 +904,15 @@ function openEdit(id){
   document.getElementById('emProg').value=s.progress||0;
   document.getElementById('emDeadline').value=s.deadline||'';
   document.getElementById('emNotes').value=s.notes||'';
-  // Members checkboxes
   document.getElementById('emMembers').innerHTML=members.length?
     members.map(m=>`<label style="display:block;font-size:.83em;margin:3px 0"><input type="checkbox" class="emMemCb" value="${m.id}" ${(s.members||[]).includes(m.id)?'checked':''}> ${m.name} ${m.role?`<span style="color:var(--text-muted)">(${m.role})</span>`:''}</label>`).join('')
     :'<span style="font-size:.82em;color:var(--text-muted)">أضف أعضاء من تبويب الفريق أولاً</span>';
-  // KPI fields
   let kh='<div style="margin-top:10px"><label style="font-size:.83em;font-weight:600">قيم مؤشرات الأداء</label>';
   init.kpis.forEach((k,i)=>{
     const v=(s.kpiValues&&s.kpiValues[i])||'';
     kh+=`<div style="margin-top:4px"><span style="font-size:.78em;color:var(--text-muted)">◆ ${k}</span>
       <input type="text" class="kpiEd" data-idx="${i}" value="${v}" placeholder="أدخل القيمة..."
-      style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:.82em;direction:rtl;margin-top:2px"></div>`;
+      style="width:100%;padding:6px 9px;font-size:.82em;direction:rtl;margin-top:3px"></div>`;
   });
   kh+='</div>';
   document.getElementById('emKpi').innerHTML=kh;
@@ -566,7 +947,6 @@ function addMember(){
 }
 function removeMember(mid){
   sMembers(gMembers().filter(m=>m.id!==mid));
-  // Clean references
   allI().forEach(init=>{
     const s=gIS(init.id);
     if(s.members&&s.members.includes(mid)){s.members=s.members.filter(x=>x!==mid);sIS(init.id,s)}
@@ -579,11 +959,11 @@ function removeMember(mid){
 function renderTeam(){
   const ms=gMembers();
   if(!ms.length){
-    document.getElementById('teamGrid').innerHTML='<div style="text-align:center;padding:20px;color:var(--text-muted)">لا يوجد أعضاء — أضف أعضاء الفريق أعلاه</div>';
+    document.getElementById('teamGrid').innerHTML='<div class="empty">لا يوجد أعضاء — أضف أعضاء الفريق أعلاه</div>';
+    const sel0=document.getElementById('taskMember');if(sel0)sel0.innerHTML='<option value="">بدون إسناد</option>';
     return;
   }
   document.getElementById('teamGrid').innerHTML=ms.map(m=>{
-    // Find all tasks for this member
     const tasks=[];
     allI().forEach(init=>{
       const s=gIS(init.id);
@@ -602,7 +982,7 @@ function renderTeam(){
         <div><div class="team-name">👤 ${m.name}</div>${m.role?`<div class="team-role">${m.role}</div>`:''}</div>
         <button class="btn btn-sm btn-danger" onclick="removeMember(${m.id})" title="حذف">✕</button>
       </div>
-      <div style="font-size:.8em;margin-top:6px;color:var(--text-muted)">${pending} قيد التنفيذ | ${completed} مكتمل</div>
+      <div style="font-size:.8em;margin-top:7px;color:var(--text-muted)">${pending} قيد التنفيذ | ${completed} مكتمل</div>
       <div class="team-tasks">
         ${tasks.length?tasks.filter(t=>!t.done).slice(0,8).map(t=>`<div class="team-task-item">${t.done?'✅':'⏳'} <strong>[${t.type}]</strong> ${t.text}</div>`).join('')
           +(tasks.filter(t=>!t.done).length>8?`<div style="color:var(--text-muted);font-size:.78em">...و ${tasks.filter(t=>!t.done).length-8} مهام أخرى</div>`:'')
@@ -610,7 +990,6 @@ function renderTeam(){
       </div>
     </div>`;
   }).join('');
-  // Update task member dropdown
   const sel=document.getElementById('taskMember');
   const cur=sel.value;
   sel.innerHTML='<option value="">بدون إسناد</option>'+ms.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
@@ -632,7 +1011,7 @@ function renderTasks(){
   let ts=gTasks();const members=gMembers();
   if(tF==='pending')ts=ts.filter(t=>!t.done);else if(tF==='done')ts=ts.filter(t=>t.done);
   const el=document.getElementById('taskList');
-  if(!ts.length){el.innerHTML='<div style="text-align:center;padding:16px;color:var(--text-muted)">لا توجد مهام</div>';return}
+  if(!ts.length){el.innerHTML='<div class="empty">لا توجد مهام</div>';return}
   el.innerHTML=ts.map(t=>{
     const mem=t.member?members.find(m=>m.id===t.member):null;
     return `<div class="task-item ${t.done?'done':''}">
@@ -644,7 +1023,6 @@ function renderTasks(){
       <span class="task-del" onclick="deleteTask(${t.id})">✕</span></div>`;
   }).join('');
 }
-
 
 // ===== QUARTERLY REPORTS =====
 function reportPeriods(){
@@ -671,7 +1049,7 @@ function initReports(){
 function reportSnapshot(){
   return allI().map(init=>{
     const s=gIS(init.id);
-    const dn=init.id.startsWith('leg-')?`1.${init.id.split('-')[1]}`:init.num;
+    const dn=init.num;
     return {id:init.id,num:dn,name:init.name,status:s.status,progress:s.progress||0,notes:s.notes||'',deadline:s.deadline||'',kpiValues:s.kpiValues||{}};
   });
 }
@@ -794,20 +1172,20 @@ function downloadReportText(){
 function renderKpiSumm(){
   let h='';
   CATS.forEach(cat=>{
-    h+=`<div style="margin-bottom:14px"><h3>${cat.icon} ${cat.name}</h3>
-    <table style="width:100%;border-collapse:collapse;font-size:.8em">
-    <tr style="background:var(--primary);color:#fff"><th style="padding:5px 6px;text-align:right">م</th><th style="padding:5px 6px;text-align:right">المبادرة</th><th style="padding:5px 6px;text-align:right">المدة</th><th style="padding:5px 6px;text-align:right">مؤشرات الأداء</th><th style="padding:5px 6px;text-align:center">الحالة</th><th style="padding:5px 6px;text-align:center">%</th></tr>`;
+    h+=`<div style="margin-bottom:16px"><h3>${cat.icon} ${cat.name}</h3>
+    <table class="kpi-table">
+    <tr style="background:var(--brand);color:#04222A"><th style="padding:7px 8px;text-align:right">م</th><th style="padding:7px 8px;text-align:right">المبادرة</th><th style="padding:7px 8px;text-align:right">المدة</th><th style="padding:7px 8px;text-align:right">مؤشرات الأداء</th><th style="padding:7px 8px;text-align:center">الحالة</th><th style="padding:7px 8px;text-align:center">%</th></tr>`;
     cat.initiatives.forEach(init=>{
       const s=gIS(init.id);
-      const bg=s.status==='completed'?'#eafaf1':s.status==='delayed'?'#fdedec':s.status==='in-progress'?'#fef9e7':'#fff';
-      const dn=init.id.startsWith('leg-')?`1.${init.id.split('-')[1]}`:init.num;
+      const bg=s.status==='completed'?'var(--success-bg)':s.status==='delayed'?'var(--danger-bg)':s.status==='in-progress'?'var(--warning-bg)':'var(--bg-2)';
+      const dn=init.num;
       h+=`<tr style="background:${bg};border-bottom:1px solid var(--border)">
-        <td style="padding:5px 6px;font-weight:600">${dn}</td>
-        <td style="padding:5px 6px">${init.name}</td>
-        <td style="padding:5px 6px;white-space:nowrap">${init.dur}</td>
-        <td style="padding:5px 6px">${init.kpis.join(' — ')}</td>
-        <td style="padding:5px 6px;text-align:center"><span class="ist ${s.status}" style="font-size:.82em">${SL[s.status]}</span></td>
-        <td style="padding:5px 6px;text-align:center;font-weight:600">${s.progress||0}%</td></tr>`;
+        <td style="padding:7px 8px;font-weight:700">${dn}</td>
+        <td style="padding:7px 8px">${init.name}</td>
+        <td style="padding:7px 8px;white-space:nowrap;color:var(--text-muted)">${init.dur}</td>
+        <td style="padding:7px 8px;color:var(--text-muted)">${init.kpis.join(' — ')}</td>
+        <td style="padding:7px 8px;text-align:center"><span class="ist ${s.status}" style="font-size:.82em">${SL[s.status]}</span></td>
+        <td style="padding:7px 8px;text-align:center;font-weight:700">${s.progress||0}%</td></tr>`;
     });
     h+='</table></div>';
   });
@@ -838,7 +1216,6 @@ function initNotes(){
   a.addEventListener('input',()=>{sNotes(a.value);document.getElementById('notesST').textContent=new Date().toLocaleTimeString('ar-KW')});
 }
 
-
 // ===== PUBLISH EXPORT =====
 function collectPublishData(){
   const state={};
@@ -858,27 +1235,51 @@ function exportPublishData(){
   URL.revokeObjectURL(a.href);
 }
 
+// ===== SIDEBAR PROGRESS =====
+function renderSideProg(){
+  const all=allI();let tp=0;all.forEach(i=>tp+=(gIS(i.id).progress||0));
+  const pct=all.length?Math.round(tp/all.length):0;
+  document.getElementById('sideProg').innerHTML=ringSVG(pct,COL.brand2,84,9);
+}
+
 // ===== TIMER =====
 function updateTimer(){
   const now=new Date(),diff=PE-now;
-  if(diff<=0){document.getElementById('mainTimer').textContent='انتهت مدة البرنامج';return}
-  const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5),el=dB(LD,now);
-  document.getElementById('mainTimer').textContent=`مضى ${el} يوم | متبقي ${d} يوم و ${h} ساعة`;
+  const t=diff<=0?'انتهت مدة البرنامج':(()=>{const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5);return `متبقٍ ${d} يوم و ${h} ساعة`})();
+  document.getElementById('mainTimer').textContent=t;
+  const el=dB(LD,now);
+  document.getElementById('sideTime').innerHTML=`مضى ${el} يوم منذ الإطلاق`;
 }
 
-// ===== TABS =====
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.tc').forEach(c=>c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
-    if(tab.dataset.tab==='timeline')renderTL();
-    if(tab.dataset.tab==='kpis')renderKpiSumm();
-    if(tab.dataset.tab==='team')renderTeam();
-    if(tab.dataset.tab==='reports')renderReportTab();
+// ===== NAV / VIEWS =====
+function buildNav(){
+  document.getElementById('nav').innerHTML=NAV.map((n,i)=>`<button class="tab ${i===0?'active':''}" data-tab="${n.t}">${icon(n.ic)}<span>${n.l}</span></button>`).join('');
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.tc').forEach(c=>c.classList.remove('active'));
+      tab.classList.add('active');
+      const v=tab.dataset.tab;
+      document.getElementById('tab-'+v).classList.add('active');
+      document.getElementById('viewTitle').textContent=TITLES[v]||'';
+      if(v==='overview')renderOverview();
+      if(v==='timeline')renderTL();
+      if(v==='kpis')renderKpiSumm();
+      if(v==='team')renderTeam();
+      if(v==='reports')renderReportTab();
+    });
   });
-});
+}
+function buildCatFilter(){
+  const sel=document.getElementById('iCatSel');
+  sel.innerHTML='<option value="all">كل الفئات</option>'+CATS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  sel.addEventListener('change',()=>{iCat=sel.value;renderCats()});
+  document.querySelectorAll('.if').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.if').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');iStatus=b.dataset.f;renderCats();
+  }));
+}
+
 document.querySelectorAll('.tf').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tf').forEach(b=>b.classList.remove('active'));
@@ -887,10 +1288,39 @@ document.querySelectorAll('.tf').forEach(btn=>{
 });
 document.getElementById('taskInp').addEventListener('keypress',e=>{if(e.key==='Enter')addTask()});
 
-function refreshAll(){renderStats();renderPhases();renderAlerts();renderCats();renderTasks();renderTeam();if(document.getElementById('reportSel'))renderReportTab();updateTimer();
-  document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ar-KW',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+function refreshAll(){
+  renderStats();renderOverview();renderPhases();renderAlerts();renderCats();renderTasks();renderTeam();renderSideProg();
+  if(document.getElementById('reportSel'))renderReportTab();
+  updateTimer();
+  document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ar-KW',{weekday:'long',month:'long',day:'numeric'});
 }
-refreshAll();initNotes();initReports();setInterval(updateTimer,6e4);
+// ===== OFFICIAL LOGO (swaps the crest with assets/logo.png if available) =====
+(function loadLogo(){
+  const img=new Image();
+  img.onload=function(){
+    const c=document.getElementById('sideCrest');
+    if(!c)return;
+    c.classList.add('has-logo');
+    c.innerHTML='<img class="crest-img" src="assets/logo.png" alt="شعار البرنامج الحكومي لحماية الأسرة">';
+  };
+  img.src='assets/logo.png';
+})();
+
+// ===== VIEWER MODE: read-only, data sourced from data.json =====
+let DATA={};
+function ld(k,def){try{var v=DATA[K+k];return v?JSON.parse(v):def}catch(e){return def}}
+function sv(){/* read-only viewer */}
+function gNotes(){return DATA[K+'notes']||''}
+function sNotes(){/* read-only viewer */}
+function boot(){
+  buildNav();buildCatFilter();refreshAll();initNotes();initReports();setInterval(updateTimer,6e4);
+  document.querySelectorAll('textarea').forEach(function(t){t.readOnly=true;});
+}
+fetch('data.json',{cache:'no-store'})
+  .then(function(r){return r.ok?r.json():{}})
+  .then(function(d){DATA=(d&&d.state)||{};var el=document.getElementById('dataUpdated');if(el&&d&&d.updatedAt){el.textContent='آخر تحديث للبيانات: '+new Date(d.updatedAt).toLocaleString('ar-KW');}})
+  .catch(function(){DATA={};})
+  .finally(boot);
 </script>
 </body>
 </html>

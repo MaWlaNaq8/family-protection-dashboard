@@ -230,6 +230,10 @@ select option{background:var(--panel)}
 .st-deadline{font-size:.72em;color:var(--ink-2)}.st-deadline.overdue{color:var(--danger);font-weight:600}
 .st-members{display:flex;gap:3px;flex-wrap:wrap}
 .st-del{cursor:pointer;color:var(--ink-3);font-size:.85em}.st-del:hover{color:var(--danger)}
+.subtask{align-items:flex-start}
+.st-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.st-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.st-row .st-text{flex:1}
 
 /* Actions & buttons */
 .iact{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
@@ -320,7 +324,7 @@ select option{background:var(--panel)}
 }
 @media(max-width:560px){.stats-row{grid-template-columns:repeat(2,1fr)}.main{padding:16px 14px}.task-input-row{flex-direction:column}}
 
-/* ===== VIEWER (read-only public/team view) ===== */
+/* ===== VIEWER (read-only) ===== */
 body.viewer .iact,
 body.viewer .subtasks>.btn,
 body.viewer .task-input-row,
@@ -358,6 +362,8 @@ body.viewer .notes-area,body.viewer .report-note{pointer-events:none;opacity:.9}
       <div class="side-prog"><div id="sideProg"></div><div class="side-prog-l">الإنجاز الكلي</div></div>
       <div class="side-time" id="sideTime">—</div>
       <button class="btn btn-outline btn-sm" style="width:100%" onclick="exportPublishData()">⬇ تصدير بيانات النشر</button>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none" onchange="if(this.files[0])importPublishData(this.files[0])">
+      <button class="btn btn-outline btn-sm" style="width:100%" onclick="document.getElementById('importFile').click()">⬆ استيراد نسخة احتياطية</button>
     </div>
   </aside>
 
@@ -497,8 +503,9 @@ body.viewer .notes-area,body.viewer .report-note{pointer-events:none;opacity:.9}
   <div class="modal">
     <h3 id="emTitle">تحديث المبادرة</h3>
     <input type="hidden" id="emId">
-    <div class="fg"><label>الحالة</label><select id="emStatus"><option value="not-started">لم تبدأ</option><option value="in-progress">قيد التنفيذ</option><option value="completed">مكتملة</option><option value="delayed">متأخرة</option></select></div>
-    <div class="fg"><label>نسبة الإنجاز (%)</label><input type="number" id="emProg" min="0" max="100"></div>
+    <div class="dal" id="emAutoNote" style="display:none">نسبة الإنجاز والحالة لهذه المبادرة تُحسبان تلقائيًا من إكمال القوانين (الفروع) أدناه.</div>
+    <div class="fg" id="fgStatus"><label>الحالة</label><select id="emStatus"><option value="not-started">لم تبدأ</option><option value="in-progress">قيد التنفيذ</option><option value="completed">مكتملة</option><option value="delayed">متأخرة</option></select></div>
+    <div class="fg" id="fgProg"><label>نسبة الإنجاز (%)</label><input type="number" id="emProg" min="0" max="100"></div>
     <div class="fg"><label>الموعد النهائي المحدد</label><input type="date" id="emDeadline"></div>
     <div class="fg"><label>إسناد إلى أعضاء الفريق</label><div id="emMembers"></div></div>
     <div class="fg"><label>ملاحظات</label><textarea id="emNotes" rows="2"></textarea></div>
@@ -814,8 +821,14 @@ function renderCats(){
   document.getElementById('catCont').innerHTML=html||'<div class="empty">لا توجد مبادرات مطابقة للتصفية الحالية.</div>';
 }
 
+// ===== BRANCH-DRIVEN INITIATIVES (e.g. legislative laws) =====
+const BRANCH_DRIVEN={'leg-1':true};
+function defaultBranches(init){return (init.laws||[]).map(l=>({text:l.t,desc:l.d,deadline:'',members:[],done:false}));}
+function getBranches(init){const st=gST(init.id);if(st&&st.length)return st;if(BRANCH_DRIVEN[init.id]&&init.laws)return defaultBranches(init);return st||[];}
+function ensureBranches(iid){let st=gST(iid);if((!st||!st.length)&&BRANCH_DRIVEN[iid]){const init=allI().find(i=>i.id===iid);st=defaultBranches(init||{});sST(iid,st);}return gST(iid);}
+function syncBranch(iid){if(!BRANCH_DRIVEN[iid])return;const init=allI().find(i=>i.id===iid);const br=getBranches(init||{id:iid});const total=br.length,done=br.filter(b=>b.done).length;const progress=total?Math.round(done/total*100):0;const cur=gIS(iid);const status=(total&&done===total)?'completed':(done>0?'in-progress':(cur.status==='delayed'?'delayed':'not-started'));sIS(iid,{progress,status});}
 function renderI(init){
-  const s=gIS(init.id),st=gST(init.id),members=gMembers();
+  const s=gIS(init.id),st=BRANCH_DRIVEN[init.id]?getBranches(init):gST(init.id),members=gMembers();
   const rc=s.status==='completed'?COL.success:s.status==='delayed'?COL.danger:s.status==='in-progress'?COL.warning:COL.muted;
   const dl=deadlineFor(init),dLeft=dB(new Date(),dl);
   let dlHint='';
@@ -833,13 +846,6 @@ function renderI(init){
     </div>
     <div class="icard-title">${init.name}</div>`;
   if(init.desc)h+=`<div class="icard-desc">${init.desc}</div>`;
-  if(init.laws&&init.laws.length){
-    h+=`<div class="laws"><div class="laws-t">القوانين المشمولة بالمراجعة (${init.laws.length})</div>`;
-    init.laws.forEach((law,i)=>{
-      h+=`<div class="law"><span class="law-n">${i+1}</span><div class="law-b"><div class="law-t">${law.t}</div><div class="law-d">${law.d}</div></div></div>`;
-    });
-    h+=`</div>`;
-  }
   h+=`<div class="imeta"><span>📅 ${init.dur}</span>${dlHint}${s.deadline?`<span>🎯 ${fD(s.deadline)}</span>`:''}</div>`;
   if(am.length)h+=`<div class="init-members">${am.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</div>`;
   h+=`<div class="kpi-sec"><div class="kpi-t">◆ مؤشرات الأداء</div>`;
@@ -848,7 +854,9 @@ function renderI(init){
     h+=`<div class="kpi-item">◆ ${k} ${v?`<span class="kpi-val">[${v}]</span>`:''}</div>`;
   });
   h+=`</div>`;
+  const bd=BRANCH_DRIVEN[init.id];
   h+=`<div class="subtasks">`;
+  if(bd)h+=`<div class="laws-t">القوانين المشمولة بالمراجعة (${st.length}) — يُكمَّل كل قانون على حدة، وتُحسب نسبة المبادرة تلقائيًا</div>`;
   st.forEach((sub,idx)=>{
     const sdl=sub.deadline?new Date(sub.deadline):null;
     const sdLeft=sdl?dB(new Date(),sdl):null;
@@ -856,22 +864,25 @@ function renderI(init){
     const subMembers=(sub.members||[]).map(mid=>members.find(m=>m.id===mid)).filter(Boolean);
     h+=`<div class="subtask ${sub.done?'done':''}">
       <input type="checkbox" class="st-cb" ${sub.done?'checked':''} onchange="toggleST('${init.id}',${idx})">
-      <span class="st-text">${sub.text}</span>
-      ${subMembers.length?`<span class="st-members">${subMembers.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</span>`:''}
-      ${sdl?`<span class="st-deadline ${sdCls}">${sdLeft!==null&&sdLeft<0&&!sub.done?'⚠️ تجاوز':'📅'} ${fD(sdl)}</span>`:''}
-      <span class="st-del" onclick="delST('${init.id}',${idx})">✕</span></div>`;
+      <div class="st-col">
+        <div class="st-row"><span class="st-text">${bd?`<span class="law-n">${idx+1}</span> `:''}${sub.text}</span>
+          ${subMembers.length?`<span class="st-members">${subMembers.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</span>`:''}
+          ${sdl?`<span class="st-deadline ${sdCls}">${sdLeft!==null&&sdLeft<0&&!sub.done?'⚠️ تجاوز':'📅'} ${fD(sdl)}</span>`:''}
+          <span class="st-del" onclick="delST('${init.id}',${idx})">✕</span></div>
+        ${sub.desc?`<div class="law-d">${sub.desc}</div>`:''}
+      </div></div>`;
   });
-  h+=`<button class="btn btn-sm btn-outline" onclick="openStMo('${init.id}')" style="margin-top:4px">+ إضافة فرع</button></div>`;
+  h+=`<button class="btn btn-sm btn-outline" onclick="openStMo('${init.id}')" style="margin-top:4px">+ ${bd?'إضافة قانون / فرع':'إضافة فرع'}</button></div>`;
   h+=`<div class="iact">
     <button class="btn btn-sm btn-primary" onclick="openEdit('${init.id}')">تحديث</button>
-    ${s.status!=='completed'?`<button class="btn btn-sm btn-success" onclick="qDone('${init.id}')">إكمال ✓</button>`:''}
+    ${(s.status!=='completed'&&!bd)?`<button class="btn btn-sm btn-success" onclick="qDone('${init.id}')">إكمال ✓</button>`:''}
   </div></div>`;
   return h;
 }
 
 // ===== SUBTASKS =====
-function toggleST(iid,idx){const st=gST(iid);st[idx].done=!st[idx].done;sST(iid,st);refreshAll()}
-function delST(iid,idx){const st=gST(iid);st.splice(idx,1);sST(iid,st);refreshAll()}
+function toggleST(iid,idx){const st=ensureBranches(iid);st[idx].done=!st[idx].done;sST(iid,st);syncBranch(iid);refreshAll()}
+function delST(iid,idx){const st=ensureBranches(iid);st.splice(idx,1);sST(iid,st);syncBranch(iid);refreshAll()}
 function openStMo(iid){
   document.getElementById('stInitId').value=iid;
   document.getElementById('stText').value='';
@@ -889,9 +900,9 @@ function saveSubtask(){
   if(!text)return;
   const dl=document.getElementById('stDeadline').value;
   const mems=[...document.querySelectorAll('.stMemCb:checked')].map(c=>parseInt(c.value));
-  const st=gST(iid);
+  const st=ensureBranches(iid);
   st.push({text,deadline:dl||'',members:mems,done:false});
-  sST(iid,st);
+  sST(iid,st);syncBranch(iid);
   closeStMo();refreshAll();
 }
 
@@ -904,6 +915,10 @@ function openEdit(id){
   document.getElementById('emProg').value=s.progress||0;
   document.getElementById('emDeadline').value=s.deadline||'';
   document.getElementById('emNotes').value=s.notes||'';
+  const bd=BRANCH_DRIVEN[id];
+  document.getElementById('fgStatus').style.display=bd?'none':'';
+  document.getElementById('fgProg').style.display=bd?'none':'';
+  document.getElementById('emAutoNote').style.display=bd?'block':'none';
   document.getElementById('emMembers').innerHTML=members.length?
     members.map(m=>`<label style="display:block;font-size:.83em;margin:3px 0"><input type="checkbox" class="emMemCb" value="${m.id}" ${(s.members||[]).includes(m.id)?'checked':''}> ${m.name} ${m.role?`<span style="color:var(--text-muted)">(${m.role})</span>`:''}</label>`).join('')
     :'<span style="font-size:.82em;color:var(--text-muted)">أضف أعضاء من تبويب الفريق أولاً</span>';
@@ -928,7 +943,8 @@ function saveEdit(){
   const members=[...document.querySelectorAll('.emMemCb:checked')].map(c=>parseInt(c.value));
   const kpiValues={};
   document.querySelectorAll('.kpiEd').forEach(inp=>{if(inp.value.trim())kpiValues[inp.dataset.idx]=inp.value.trim()});
-  sIS(id,{status,progress,deadline,notes,members,kpiValues});
+  if(BRANCH_DRIVEN[id]){sIS(id,{deadline,notes,members,kpiValues});syncBranch(id);}
+  else{sIS(id,{status,progress,deadline,notes,members,kpiValues});}
   closeEdit();refreshAll();
 }
 function qDone(id){sIS(id,{status:'completed',progress:100});refreshAll()}
@@ -1234,6 +1250,21 @@ function exportPublishData(){
   a.click();
   URL.revokeObjectURL(a.href);
 }
+function importPublishData(file){
+  const r=new FileReader();
+  r.onload=function(e){
+    try{
+      const d=JSON.parse(e.target.result);
+      const st=(d&&d.state)?d.state:d;
+      if(!st||typeof st!=='object')throw 0;
+      if(!confirm('سيتم استبدال بيانات اللوحة الحالية بالبيانات المستوردة. متابعة؟'))return;
+      Object.keys(st).forEach(function(k){if(k.indexOf(K)===0)localStorage.setItem(k,st[k]);});
+      alert('تم استيراد البيانات بنجاح.');
+      location.reload();
+    }catch(err){alert('تعذّر قراءة الملف — تأكد أنه ملف data.json صحيح.');}
+  };
+  r.readAsText(file);
+}
 
 // ===== SIDEBAR PROGRESS =====
 function renderSideProg(){
@@ -1289,6 +1320,7 @@ document.querySelectorAll('.tf').forEach(btn=>{
 document.getElementById('taskInp').addEventListener('keypress',e=>{if(e.key==='Enter')addTask()});
 
 function refreshAll(){
+  Object.keys(BRANCH_DRIVEN).forEach(syncBranch);
   renderStats();renderOverview();renderPhases();renderAlerts();renderCats();renderTasks();renderTeam();renderSideProg();
   if(document.getElementById('reportSel'))renderReportTab();
   updateTimer();
@@ -1306,21 +1338,13 @@ function refreshAll(){
   img.src='assets/logo.png';
 })();
 
-// ===== VIEWER MODE: read-only, data sourced from data.json =====
 let DATA={};
 function ld(k,def){try{var v=DATA[K+k];return v?JSON.parse(v):def}catch(e){return def}}
-function sv(){/* read-only viewer */}
+function sv(){}
 function gNotes(){return DATA[K+'notes']||''}
-function sNotes(){/* read-only viewer */}
-function boot(){
-  buildNav();buildCatFilter();refreshAll();initNotes();initReports();setInterval(updateTimer,6e4);
-  document.querySelectorAll('textarea').forEach(function(t){t.readOnly=true;});
-}
-fetch('data.json',{cache:'no-store'})
-  .then(function(r){return r.ok?r.json():{}})
-  .then(function(d){DATA=(d&&d.state)||{};var el=document.getElementById('dataUpdated');if(el&&d&&d.updatedAt){el.textContent='آخر تحديث للبيانات: '+new Date(d.updatedAt).toLocaleString('ar-KW');}})
-  .catch(function(){DATA={};})
-  .finally(boot);
+function sNotes(){}
+function boot(){buildNav();buildCatFilter();refreshAll();initNotes();initReports();setInterval(updateTimer,6e4);document.querySelectorAll('textarea').forEach(function(t){t.readOnly=true;});}
+fetch('data.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():{}}).then(function(d){DATA=(d&&d.state)||{};var el=document.getElementById('dataUpdated');if(el&&d&&d.updatedAt){el.textContent='آخر تحديث للبيانات: '+new Date(d.updatedAt).toLocaleString('ar-KW');}}).catch(function(){DATA={};}).finally(boot);
 </script>
 </body>
 </html>

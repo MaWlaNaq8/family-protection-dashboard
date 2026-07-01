@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<!--
+  لوحة المتابعة — النسخة الثابتة المرجعية
+  البرنامج الحكومي لحماية الأسرة والطفولة — وزارة العدل
+  تاريخ الإعداد المرجعي: 12 مايو 2026 — 7:14 مساءً (بتوقيت الكويت)
+  هذه النسخة الأصلية المبسّطة المعتمدة للرجوع إليها دائمًا.
+-->
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة متابعة البرنامج الحكومي لحماية الأسرة — عرض للفريق</title>
+<style>
+:root{color-scheme:light;--primary:#1a5276;--primary-light:#2980b9;--success:#27ae60;--warning:#f39c12;--danger:#e74c3c;--info:#3498db;--bg:#f5f7fa;--card:#fff;--text:#2c3e50;--text-muted:#7f8c8d;--border:#e0e6ed;--shadow:0 2px 12px rgba(0,0,0,.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;line-height:1.6;padding:12px;font-size:13px}
+h1{font-size:1.3em;color:var(--primary)}h2{font-size:1.05em;color:var(--primary);margin-bottom:10px}h3{font-size:.92em;color:var(--primary-light);margin-bottom:6px}
+.header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:18px 22px;border-radius:12px;margin-bottom:14px}
+.header h1{color:#fff;font-size:1.25em}.header .sub{color:rgba(255,255,255,.8);font-size:.82em;margin-bottom:4px}
+.hinfo{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap;font-size:.8em}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px;margin-bottom:14px}
+.sc{background:var(--card);border-radius:10px;padding:12px;text-align:center;box-shadow:var(--shadow);border-top:3px solid var(--primary);transition:transform .2s}
+.sc:hover{transform:translateY(-2px)}.sc.g{border-top-color:var(--success)}.sc.y{border-top-color:var(--warning)}.sc.r{border-top-color:var(--danger)}.sc.b{border-top-color:var(--info)}
+.sn{font-size:1.7em;font-weight:700;line-height:1.2}.sl{font-size:.75em;color:var(--text-muted);margin-top:2px}
+.card{background:var(--card);border-radius:12px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.phases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.pc{background:var(--bg);border-radius:10px;padding:12px;border-right:4px solid var(--primary)}
+.pc.active{border-right-color:var(--success);background:#eafaf1}.pc.done{border-right-color:var(--success);background:#d5f5e3;opacity:.85}
+.pt{font-weight:700;font-size:.92em}.ps{font-size:.78em;color:var(--text-muted)}.ptm{font-size:.85em;font-weight:600;color:var(--primary);margin-top:4px}
+.pp{height:5px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden}.ppf{height:100%;border-radius:3px;background:var(--success);transition:width .5s}
+.tabs{display:flex;gap:3px;margin-bottom:12px;flex-wrap:wrap;overflow-x:auto}
+.tab{padding:7px 12px;border:none;background:var(--card);border-radius:8px 8px 0 0;cursor:pointer;font-size:.8em;font-family:inherit;color:var(--text-muted);transition:all .2s;border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--text)}.tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.tc{display:none}.tc.active{display:block}
+.cat-sec{background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px}
+.cat-hdr{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:3px 0}
+.badge{background:var(--primary);color:#fff;padding:2px 9px;border-radius:12px;font-size:.75em}
+.cat-body{margin-top:10px}.cat-body.collapsed{display:none}
+.init{background:var(--bg);border-radius:8px;padding:10px 12px;margin-bottom:8px;border-right:3px solid var(--border);transition:all .2s}
+.init.status-not-started{border-right-color:var(--text-muted)}.init.status-in-progress{border-right-color:var(--warning)}.init.status-completed{border-right-color:var(--success)}.init.status-delayed{border-right-color:var(--danger)}
+.ih{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.inum{font-size:.72em;background:var(--primary);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.ititle{font-weight:600;font-size:.88em;flex:1}
+.ist{font-size:.7em;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.ist.not-started{background:#ecf0f1;color:var(--text-muted)}.ist.in-progress{background:#fef9e7;color:#d68910}.ist.completed{background:#eafaf1;color:#1e8449}.ist.delayed{background:#fdedec;color:#c0392b}
+.imeta{display:flex;gap:8px;margin-top:5px;font-size:.73em;color:var(--text-muted);flex-wrap:wrap}
+.ipb{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}.ipf{height:100%;border-radius:2px;transition:width .3s}
+.kpi-sec{margin-top:6px;padding:6px 8px;background:rgba(26,82,118,.04);border-radius:5px;border-right:2px solid var(--info)}
+.kpi-t{font-size:.72em;font-weight:600;color:var(--info);margin-bottom:3px}
+.kpi-item{font-size:.75em;line-height:1.6}
+.kpi-val{color:var(--success);margin-right:4px;font-weight:600}
+/* Subtasks */
+.subtasks{margin-top:8px;padding-right:16px;border-right:2px dashed var(--border)}
+.subtask{display:flex;align-items:center;gap:6px;padding:5px 8px;background:#fff;border-radius:6px;margin-bottom:4px;font-size:.82em}
+.subtask.done{opacity:.6}.subtask.done .st-text{text-decoration:line-through}
+.st-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--success)}.st-text{flex:1}
+.st-deadline{font-size:.72em;color:var(--text-muted)}.st-deadline.overdue{color:var(--danger);font-weight:600}
+.st-members{display:flex;gap:2px;flex-wrap:wrap}
+.member-chip{font-size:.68em;background:var(--primary);color:#fff;padding:1px 6px;border-radius:8px;display:inline-block}
+.member-chip.removable{cursor:pointer}.member-chip.removable:hover{background:var(--danger)}
+.st-del{cursor:pointer;color:var(--text-muted);font-size:.8em}.st-del:hover{color:var(--danger)}
+.add-subtask-row{display:flex;gap:4px;margin-top:6px}
+.add-subtask-row input,.add-subtask-row select{padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:.8em;direction:rtl}
+.add-subtask-row input{flex:1}
+/* Assigned members on init */
+.init-members{margin-top:4px;display:flex;gap:3px;flex-wrap:wrap}
+/* Actions */
+.iact{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.btn{padding:5px 12px;border:none;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.78em;transition:all .2s}
+.btn-sm{padding:3px 8px;font-size:.72em}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-light)}
+.btn-success{background:var(--success);color:#fff}.btn-warning{background:var(--warning);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{background:var(--bg)}
+/* Team */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
+.team-card{background:var(--bg);border-radius:10px;padding:12px;border-right:3px solid var(--primary)}
+.team-name{font-weight:700;font-size:.95em}.team-role{font-size:.78em;color:var(--text-muted)}
+.team-tasks{margin-top:8px;font-size:.8em}
+.team-task-item{padding:4px 0;border-bottom:1px solid var(--border)}
+.team-task-item:last-child{border-bottom:none}
+/* Tasks */
+.task-input-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.task-input-row input,.task-input-row select{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl}
+.task-input-row input{flex:1;min-width:140px}
+.task-item{display:flex;align-items:center;gap:6px;padding:8px;background:var(--bg);border-radius:8px;margin-bottom:5px}
+.task-item.done{opacity:.6}.task-item.done .task-text{text-decoration:line-through}
+.task-cb{width:17px;height:17px;cursor:pointer;accent-color:var(--success)}.task-text{flex:1;font-size:.85em}
+.task-pri{font-size:.68em;padding:2px 6px;border-radius:8px}.task-pri.high{background:#fdedec;color:var(--danger)}.task-pri.medium{background:#fef9e7;color:var(--warning)}.task-pri.low{background:#eafaf1;color:var(--success)}
+.task-del{cursor:pointer;color:var(--text-muted);font-size:.83em}.task-del:hover{color:var(--danger)}
+/* Timeline */
+.timeline{position:relative;padding:6px 22px 6px 0}.timeline::before{content:'';position:absolute;right:7px;top:0;bottom:0;width:2px;background:var(--border)}
+.tl-item{position:relative;padding:0 22px 16px 0}.tl-item::before{content:'';position:absolute;right:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--primary);border:2px solid #fff;box-shadow:0 0 0 2px var(--primary)}
+.tl-item.done::before{background:var(--success);box-shadow:0 0 0 2px var(--success)}.tl-item.current::before{background:var(--warning);box-shadow:0 0 0 2px var(--warning);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px var(--warning)}50%{box-shadow:0 0 0 6px rgba(243,156,18,.3)}}
+.tl-date{font-size:.75em;color:var(--text-muted)}.tl-title{font-weight:600;font-size:.88em}.tl-desc{font-size:.8em;color:var(--text-muted)}
+.notes-area{width:100%;min-height:90px;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:.85em;direction:rtl;resize:vertical;margin-top:6px}
+
+.report-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.report-toolbar select,.report-toolbar input{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl}
+.report-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px}
+.report-stat{background:var(--bg);border-radius:10px;padding:10px;border-right:3px solid var(--primary)}
+.report-stat .num{font-size:1.45em;font-weight:800;color:var(--primary);line-height:1.1}.report-stat .lbl{font-size:.76em;color:var(--text-muted)}
+.report-section{background:var(--bg);border-radius:10px;padding:12px;margin:10px 0;border-right:3px solid var(--info)}
+.report-section h3{margin-bottom:8px}.report-list{padding-right:18px;font-size:.86em}.report-list li{margin-bottom:6px}
+.report-preview{white-space:pre-wrap;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.86em;line-height:1.8;max-height:360px;overflow:auto}
+.report-note{width:100%;min-height:80px;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:.85em;direction:rtl;resize:vertical}
+/* Modal */
+.mo{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center}.mo.show{display:flex}
+.modal{background:var(--card);border-radius:12px;padding:20px;width:92%;max-width:520px;max-height:85vh;overflow-y:auto;direction:rtl}
+.fg{margin-bottom:10px}.fg label{display:block;font-size:.83em;margin-bottom:3px;font-weight:600}
+.fg input,.fg select,.fg textarea{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl}
+.factions{display:flex;gap:6px;margin-top:14px}
+.dal{background:#fef9e7;border:1px solid #f9e79f;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:.83em}
+.dal.danger{background:#fdedec;border-color:#f5b7b1}
+@media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}.phases-grid{grid-template-columns:1fr}.task-input-row{flex-direction:column}}
+
+/* Viewer mode: keep the dashboard visually close to admin, but remove edit actions */
+.viewer-only .iact,.viewer-only .add-subtask-row,.viewer-only .st-del,.viewer-only .team-card .btn,.viewer-only #tab-tasks .task-input-row,.viewer-only .task-del{display:none!important}
+.viewer-only input[type=checkbox]{pointer-events:none;accent-color:var(--success)}
+.viewer-only textarea,.viewer-only input,.viewer-only select{pointer-events:auto}
+.viewer-only textarea[readonly],.viewer-only input[readonly]{background:#f8fafc;color:var(--text)}
+.viewer-only .viewer-hidden{display:none!important}
+</style>
+</head>
+<body class="viewer-only">
+<div class="header">
+  <h1>📊 لوحة متابعة البرنامج الحكومي لحماية الأسرة</h1>
+  <div class="sub">وزارة العدل — 24 مبادرة | خطة 2026–2029</div>
+  <div class="hinfo">
+    <div>⏱️ <span id="mainTimer"></span></div>
+    <div>📅 <span id="todayDate"></span></div>
+    <div>🚀 تاريخ الإطلاق: 12 مايو 2026</div>
+  </div>
+</div>
+<div class="dal" style="background:#eafaf1;border-color:#abebc6">
+  👁️ هذه نسخة عرض فقط للفريق. آخر تحديث: <strong id="viewerUpdatedAt">—</strong>
+</div>
+<div id="alerts"></div>
+<div class="stats-row" id="statsRow"></div>
+<div class="card"><h2>⏳ مراحل التنفيذ</h2><div class="phases-grid" id="phasesGrid"></div></div>
+<div class="tc" id="tab-team">
+  <div class="card">
+    <h2>👥 إدارة فريق العمل</h2>
+    
+    <div class="team-grid" id="teamGrid"></div>
+  </div>
+</div>
+<div class="tc" id="tab-kpis"><div class="card"><h2>📏 ملخص مؤشرات الأداء</h2><div id="kpiSumm"></div></div></div>
+<div class="tc" id="tab-reports">
+  <div class="card">
+    <h2>📄 التقارير الدورية لمجلس الوزراء</h2>
+    <div class="dal">
+      تُعد التقارير كل ثلاثة أشهر من تاريخ إطلاق البرنامج في 12 مايو 2026.
+      يمكن توليد التقرير من حالة المبادرات الحالية، ويحفظ النظام لقطة التقرير للمقارنة مع التقرير التالي.
+    </div>
+    <div class="report-toolbar">
+      <label style="font-weight:600;font-size:.84em">فترة التقرير</label>
+      <select id="reportSel"></select>
+      <button class="btn btn-primary" onclick="generateReport()">توليد/تحديث التقرير من الحالة الحالية</button>
+      <button class="btn btn-outline" onclick="copyReportText()">نسخ نص التقرير</button>
+      <button class="btn btn-outline" onclick="downloadReportText()">تنزيل TXT</button>
+    </div>
+    <div id="reportStatus" style="font-size:.8em;color:var(--text-muted);margin-bottom:8px"></div>
+    <div id="reportSummary"></div>
+    <div class="report-section">
+      <h3>ملاحظات تحريرية لهذا التقرير</h3>
+      <textarea class="report-note" id="reportCustomNotes" placeholder="أضف ملاحظات أو صياغة خاصة تُدرج في التقرير..." oninput="saveReportNotes()"></textarea>
+    </div>
+    <div class="report-section">
+      <h3>معاينة نص التقرير</h3>
+      <div class="report-preview" id="reportPreview"></div>
+    </div>
+  </div>
+</div>
+<div class="tc" id="tab-tasks">
+  <div class="card">
+    <h2>✅ إدارة المهام</h2>
+    <div class="task-input-row">
+      <input type="text" id="taskInp" placeholder="أضف مهمة جديدة...">
+      <select id="taskPri"><option value="high">عاجل</option><option value="medium" selected>متوسط</option><option value="low">عادي</option></select>
+      <select id="taskCat"><option value="">جميع الفئات</option><option value="تشريعي">التشريعي</option><option value="رقمي">الرقمي</option><option value="حوكمة">الحوكمة</option><option value="توعية">التوعية</option><option value="بنية">البنية التحتية</option><option value="بيانات">البيانات</option><option value="عام">عام</option></select>
+      <select id="taskMember"><option value="">بدون إسناد</option></select>
+      <button class="btn btn-primary" onclick="addTask()">إضافة</button>
+    </div>
+    <div id="taskFilter" style="margin-bottom:10px">
+      <button class="btn btn-sm btn-outline tf active" data-f="all">الكل</button>
+      <button class="btn btn-sm btn-outline tf" data-f="pending">قيد التنفيذ</button>
+      <button class="btn btn-sm btn-outline tf" data-f="done">مكتمل</button>
+    </div>
+    <div id="taskList"></div>
+  </div>
+</div>
+<div class="tc" id="tab-timeline"><div class="card"><h2>📅 المسار الزمني</h2><div class="timeline" id="tlCont"></div></div></div>
+<div class="tc" id="tab-notes"><div class="card"><h2>📝 ملاحظات</h2><textarea class="notes-area" id="notesArea" placeholder="سجّل ملاحظاتك..."></textarea><div style="margin-top:6px;font-size:.75em;color:var(--text-muted)">آخر حفظ: <span id="notesST">—</span></div></div></div>
+
+<!-- Edit Modal -->
+<div class="mo" id="editMo">
+  <div class="modal">
+    <h3 id="emTitle">تحديث المبادرة</h3>
+    <input type="hidden" id="emId">
+    <div class="fg"><label>الحالة</label><select id="emStatus"><option value="not-started">لم تبدأ</option><option value="in-progress">قيد التنفيذ</option><option value="completed">مكتملة</option><option value="delayed">متأخرة</option></select></div>
+    <div class="fg"><label>نسبة الإنجاز (%)</label><input type="number" id="emProg" min="0" max="100"></div>
+    <div class="fg"><label>الموعد النهائي المحدد</label><input type="date" id="emDeadline"></div>
+    <div class="fg"><label>إسناد إلى أعضاء الفريق</label><div id="emMembers"></div></div>
+    <div class="fg"><label>ملاحظات</label><textarea id="emNotes" rows="2"></textarea></div>
+    <div id="emKpi"></div>
+    <div class="factions"><button class="btn btn-primary" onclick="saveEdit()">حفظ</button><button class="btn btn-outline" onclick="closeEdit()">إلغاء</button></div>
+  </div>
+</div>
+<!-- Subtask Modal -->
+<div class="mo" id="stMo">
+  <div class="modal">
+    <h3>إضافة فرع للمبادرة</h3>
+    <input type="hidden" id="stInitId">
+    <div class="fg"><label>وصف الفرع</label><input type="text" id="stText" placeholder="وصف المهمة الفرعية..."></div>
+    <div class="fg"><label>الموعد النهائي</label><input type="date" id="stDeadline"></div>
+    <div class="fg"><label>إسناد إلى</label><div id="stMemSel"></div></div>
+    <div class="factions"><button class="btn btn-primary" onclick="saveSubtask()">إضافة</button><button class="btn btn-outline" onclick="closeStMo()">إلغاء</button></div>
+  </div>
+</div>
+
+<script>
+const LD=new Date('2026-05-12'),PE=new Date('2029-05-12');
+const PHASES=[
+  {id:'p1',name:'المرحلة الأولى',sub:'التهيئة والإطلاق',dur:'شهر إلى 3 أشهر',endM:3},
+  {id:'p2',name:'المرحلة الثانية',sub:'التنفيذ الأساسي',dur:'3 أشهر إلى سنة',endM:12},
+  {id:'p3',name:'المرحلة الثالثة',sub:'التعميق والاستدامة',dur:'سنة إلى 3 سنوات',endM:36}
+];
+const CATS=[
+  {id:'legislative',name:'الإطار التشريعي',icon:'⚖️',dur:'6 أشهر إلى سنة',phase:'p2',
+    initiatives:[
+      {id:'leg-1',num:1,name:'مراجعة وتطوير قانون إثبات النسب وتصحيح الأسماء',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
+        desc:'تحقيق الدعاوى والطلبات المتعلقة بالأنساب والأسماء والألقاب وصونها من العبث، والحيلولة دون التحايل على قوانين الجنسية والإقامة والتوظف.'},
+      {id:'leg-2',num:1,name:'مراجعة وتطوير قانون محكمة الأسرة',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
+        desc:'تنظيم إجراءات التقاضي في دعاوى الأحوال الشخصية، ومراعاة خصوصية المنازعات الأسرية، وضمان سرعة وفاعلية تنفيذ الأحكام.'},
+      {id:'leg-3',num:1,name:'مراجعة وتطوير قانون الأحوال الشخصية',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
+        desc:'تقرير الأحكام الموضوعية لمسائل الأحوال الشخصية والآثار المترتبة عليها، وترسيخ حقوق أفراد الأسرة.'},
+      {id:'leg-4',num:1,name:'مراجعة وتطوير قانون الحماية من العنف الأسري',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
+        desc:'تنظيم آليات مؤسسية لمكافحة جرائم العنف الأسري وكفالة الحماية القانونية اللازمة لضحاياها. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
+      {id:'leg-5',num:1,name:'مراجعة وتطوير قانون حقوق الطفل',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
+        desc:'كفالة رعاية الطفل وحمايته وصون حقوقه وضمان نشأته في بيئة آمنة وسليمة بما يحقق مصلحته الفضلى. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
+      {id:'leg-6',num:1,name:'مراجعة وتطوير قانون الأحداث',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة اكتمال المراجعة التشريعية','عدد التعديلات القانونية المُنجزة','التزام الجدول الزمني'],
+        desc:'وقاية الحدث من الانحراف وعلاج المنحرف وإدماجه في المجتمع وضمان المعاملة الجنائية العادلة له. (بالتعاون مع وزارة الشؤون الاجتماعية)'},
+    ]
+  },
+  {id:'digital',name:'التحول الرقمي',icon:'💻',dur:'3 أشهر إلى سنة',phase:'p2',
+    initiatives:[
+      {id:'dig-1',num:2,name:'تفعيل التقاضي الإلكتروني في المنازعات الأسرية',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة التحول الرقمي','عدد الخدمات المدرجة','مدى سهولة الوصول']},
+      {id:'dig-2',num:3,name:'توثيق مسائل الأحوال الشخصية إلكترونيًا',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد السجلات المرقمنة','مدى سهولة الوصول','عدد الجهات بالربط الإلكتروني']},
+      {id:'dig-3',num:4,name:'تقديم الاستشارات الأسرية والنفسية عن بُعد',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد الجلسات الإلكترونية شهريًا','معدل رضا المستفيدين','متوسط وقت الانتظار']},
+      {id:'dig-4',num:5,name:'طرح محتوى توعوي رقمي عبر المنصات الرسمية',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد المحتويات المنشورة شهريًا','معدل التفاعل والوصول','عدد المتابعين']},
+      {id:'dig-5',num:6,name:'تفعيل الرؤية عن بُعد عبر منصة رسمية',dur:'6 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد جلسات الرؤية الإلكترونية','نسبة تنفيذ أوامر الرؤية','معدل رضا المستخدمين']},
+    ]
+  },
+  {id:'governance',name:'الحوكمة الإدارية والكفاءة المهنية',icon:'🏛️',dur:'3 أشهر إلى سنة',phase:'p1',
+    initiatives:[
+      {id:'gov-1',num:7,name:'إعداد دليل إرشادي ومرجع مهني موحَّد',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['إنجاز إصدار الدليل','عدد الموظفين المُدرَّبين','نسبة الالتزام بمعايير السلوك']},
+      {id:'gov-2',num:8,name:'ضبط معايير اعتماد الخبراء في الشأن الأسري',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['عدد الخبراء المعتمدين','نسبة الامتثال للمعايير','عدد الملاحظات ضد الخبراء']},
+      {id:'gov-3',num:9,name:'تنظيم شروط مزاولة مهنة الإرشاد الأسري',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['عدد المُرشدين المُرخَّصين','الشروط المهنية المُقنَّنة','نسبة الامتثال']},
+      {id:'gov-4',num:10,name:'برامج تدريبية لرفع كفاءة الموظفين',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['عدد الدورات سنويًا','نسبة الموظفين المستفيدين','معدل تحسن الأداء']},
+      {id:'gov-5',num:11,name:'تأهيل العاملين في مراكز الرؤية',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['عدد المؤهَّلين','نسبة تحسن التقييمات','عدد البرامج التطويرية']},
+      {id:'gov-6',num:12,name:'ضمان تنفيذ أحكام الرؤية وفرض جزاءات رادعة',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['نسبة تنفيذ أحكام الرؤية','عدد الجزاءات المُطبَّقة','نسبة انخفاض الإخلال']},
+      {id:'gov-7',num:13,name:'تخصيص ميزانية من هيئة القصر وبرامج تأهيلية',dur:'3 إلى 6 أشهر',phase:'p1',
+        kpis:['حجم الميزانية من ريع الأثلاث','عدد البرامج المُستحدَثة','عدد الأطفال المستفيدين']},
+    ]
+  },
+  {id:'awareness',name:'التوعية الوقائية',icon:'📢',dur:'3 أشهر إلى سنة',phase:'p2',
+    initiatives:[
+      {id:'awa-1',num:14,name:'برامج تدريبية إلزامية للمقبلين على الزواج',dur:'3 إلى 9 أشهر',phase:'p2',
+        kpis:['عدد البرامج سنويًا','عدد المستفيدين','معدل رضا المشاركين']},
+      {id:'awa-2',num:15,name:'منظومة إرشاد زواجي في حالات النزاع',dur:'3 إلى 6 أشهر',phase:'p2',
+        kpis:['عدد الحالات المُعالجة','نسبة نجاح التدخل','عدد قنوات الاستشارة']},
+      {id:'awa-3',num:16,name:'جلسات توجيه وإرشاد أسري قبل تنفيذ الرؤية',dur:'3 إلى 9 أشهر',phase:'p2',
+        kpis:['عدد الجلسات شهريًا','نسبة المشاركة','معدل رضا المستفيدين']},
+      {id:'awa-4',num:17,name:'ندوات توجيه أسري في معهد الدراسات القضائية',dur:'3 إلى 6 أشهر',phase:'p2',
+        kpis:['عدد الندوات سنويًا','عدد المشاركين','تنوع الجمهور المستهدف']},
+    ]
+  },
+  {id:'infrastructure',name:'البنية التحتية',icon:'🏗️',dur:'سنة إلى 3 سنوات',phase:'p3',
+    initiatives:[
+      {id:'inf-1',num:18,name:'تطوير مراكز الرؤية وإنشاء مبانٍ نموذجية',dur:'سنة إلى 3 سنوات',phase:'p3',
+        kpis:['نسبة إنجاز المشاريع','عدد المراكز المُطوَّرة','نسبة رضا الأسر','المعايير البيئية للأطفال']},
+      {id:'inf-2',num:19,name:'تشييد مجمّع متكامل لمحكمة الأسرة',dur:'سنة إلى 3 سنوات',phase:'p3',
+        kpis:['نسبة إنجاز المجمّع','عدد الجهات المُدمجة','متوسط وقت الانتظار','نسبة رضا المستفيدين']},
+    ]
+  },
+  {id:'data',name:'استطلاع الرأي وتحليل البيانات',icon:'📊',dur:'3 أشهر إلى سنة',phase:'p2',
+    initiatives:[
+      {id:'dat-1',num:20,name:'استبيانات وطنية رقمية لدعم البحث',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد الاستبيانات المُنجزة','حجم عينة المشاركين','نسبة الاستفادة في صنع القرار']},
+      {id:'dat-2',num:21,name:'استطلاع آراء المتقاضين في محكمة الأسرة',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة رضا المتقاضين','عدد الملاحظات المُتابَعة','عدد التحسينات المُتخَّذة']},
+      {id:'dat-3',num:22,name:'استبيان ملاحظات مراجعي مراكز الرؤية',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['نسبة رضا المراجعين','عدد الملاحظات المُتابَعة','عدد التحسينات']},
+      {id:'dat-4',num:23,name:'تقييم تجربة المستفيدين من الاستشارات الأسرية',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['معدل الرضا العام','عدد التقييمات الدورية','نسبة التحسن في الجودة']},
+      {id:'dat-5',num:24,name:'دراسة استقصائية للشباب المقبلين على الزواج',dur:'3 أشهر إلى سنة',phase:'p2',
+        kpis:['عدد المشاركين','نسبة الوعي قبل وبعد','رصد المعوقات']},
+    ]
+  }
+];
+
+const SL={'not-started':'لم تبدأ','in-progress':'قيد التنفيذ','completed':'مكتملة','delayed':'متأخرة'};
+const SC={'not-started':'#95a5a6','in-progress':'#f39c12','completed':'#27ae60','delayed':'#e74c3c'};
+
+// ===== STATE =====
+const K='fp3_';
+function ld(k,def){try{return JSON.parse(localStorage.getItem(K+k))||def}catch{return def}}
+function sv(k,v){localStorage.setItem(K+k,JSON.stringify(v))}
+function gIS(id){return ld('i_'+id,{status:'not-started',progress:0,notes:'',kpiValues:{},deadline:'',members:[]})}
+function sIS(id,d){sv('i_'+id,{...gIS(id),...d})}
+function gST(id){return ld('st_'+id,[])}
+function sST(id,v){sv('st_'+id,v)}
+function gMembers(){return ld('members',[])}
+function sMembers(v){sv('members',v)}
+function gTasks(){return ld('tasks',[])}
+function sTasks(v){sv('tasks',v)}
+function gNotes(){return localStorage.getItem(K+'notes')||''}
+function sNotes(v){localStorage.setItem(K+'notes',v)}
+function gReports(){return ld('reports',{})}
+function sReports(v){sv('reports',v)}
+
+// ===== HELPERS =====
+function addM(d,m){const r=new Date(d);r.setMonth(r.getMonth()+m);return r}
+function dB(a,b){return Math.ceil((b-a)/864e5)}
+function fD(d){if(typeof d==='string')d=new Date(d);return d.toLocaleDateString('ar-KW',{year:'numeric',month:'long',day:'numeric'})}
+function allI(){const r=[];CATS.forEach(c=>c.initiatives.forEach(i=>r.push(i)));return r}
+function pdMax(dur){
+  if(dur.includes('3 سنوات'))return 36;if(dur.includes('سنتين'))return 24;
+  if(/سنة إلى/.test(dur)&&dur.includes('سنوات'))return 36;
+  if(dur.includes('9 أشهر'))return 9;
+  if(dur.includes('إلى سنة')||dur.includes('شهر إلى سنة'))return 12;
+  if(dur.includes('إلى 6'))return 6;if(dur.includes('3 أشهر'))return 3;
+  return 12;
+}
+function deadlineFor(init){
+  const s=gIS(init.id);
+  if(s.deadline)return new Date(s.deadline);
+  return addM(LD,pdMax(init.dur));
+}
+
+// ===== STATS =====
+function renderStats(){
+  const all=allI();let c=0,ip=0,dl=0,ns=0,tp=0;
+  all.forEach(i=>{const s=gIS(i.id);if(s.status==='completed')c++;else if(s.status==='in-progress')ip++;else if(s.status==='delayed')dl++;else ns++;tp+=(s.progress||0)});
+  const pct=all.length?Math.round(tp/all.length):0;
+  const el=dB(LD,new Date());
+  document.getElementById('statsRow').innerHTML=`
+    <div class="sc b"><div class="sn">${all.length}</div><div class="sl">إجمالي المبادرات</div></div>
+    <div class="sc g"><div class="sn">${c}</div><div class="sl">مكتملة</div></div>
+    <div class="sc y"><div class="sn">${ip}</div><div class="sl">قيد التنفيذ</div></div>
+    <div class="sc r"><div class="sn">${dl}</div><div class="sl">متأخرة</div></div>
+    <div class="sc"><div class="sn">${ns}</div><div class="sl">لم تبدأ</div></div>
+    <div class="sc b"><div class="sn">${pct}%</div><div class="sl">الإنجاز الكلي</div></div>
+    <div class="sc"><div class="sn">${el}</div><div class="sl">يوم منذ الإطلاق</div></div>
+    <div class="sc"><div class="sn">${gMembers().length}</div><div class="sl">أعضاء الفريق</div></div>`;
+}
+
+// ===== PHASES =====
+function renderPhases(){
+  const now=new Date();
+  document.getElementById('phasesGrid').innerHTML=PHASES.map(p=>{
+    const end=addM(LD,p.endM),td=dB(LD,end),el=Math.max(0,Math.min(td,dB(LD,now))),pct=Math.round(el/td*100);
+    const dl=dB(now,end);let cls='active',txt='';
+    if(now>end){cls='done';txt='✅ انتهت المدة المحددة'}
+    else txt=`⏳ المدة القصوى تنتهي بعد ${dl} يوم (${fD(end)})`;
+    let pi=0,pd=0;allI().forEach(i=>{if(i.phase===p.id){pi++;if(gIS(i.id).status==='completed')pd++}});
+    return `<div class="pc ${cls}"><div class="pt">${p.name}</div><div class="ps">${p.sub} — ${p.dur}</div>
+      <div class="ptm">${txt}</div><div class="ps">${pd}/${pi} مبادرة مكتملة</div>
+      <div class="pp"><div class="ppf" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+}
+
+// ===== ALERTS =====
+function renderAlerts(){
+  const now=new Date(),als=[];
+  allI().forEach(init=>{
+    const s=gIS(init.id);if(s.status==='completed')return;
+    const dl=dB(now,deadlineFor(init));
+    if(dl<0)als.push({init,dl,t:'over'});
+    else if(dl<=30)als.push({init,dl,t:'soon'});
+  });
+  document.getElementById('alerts').innerHTML=als.map(a=>
+    a.t==='over'?`<div class="dal danger">⚠️ <strong>تجاوز الموعد:</strong> «${a.init.name}» تجاوزت بـ ${Math.abs(a.dl)} يوم</div>`
+    :`<div class="dal">⏰ «${a.init.name}» — متبقي ${a.dl} يوم على الموعد النهائي</div>`
+  ).join('');
+}
+
+// ===== CATEGORIES - ordered by phase =====
+function renderCats(){
+  // Sort categories by phase order
+  const phaseOrder={'p1':0,'p2':1,'p3':2};
+  const sorted=[...CATS].sort((a,b)=>(phaseOrder[a.phase]||0)-(phaseOrder[b.phase]||0));
+  const phaseLabels={'p1':'المرحلة الأولى — التهيئة والإطلاق','p2':'المرحلة الثانية — التنفيذ الأساسي','p3':'المرحلة الثالثة — التعميق والاستدامة'};
+  let html='',lastPhase='';
+  sorted.forEach(cat=>{
+    if(cat.phase!==lastPhase){
+      lastPhase=cat.phase;
+      html+=`<div style="background:var(--primary);color:#fff;padding:8px 14px;border-radius:8px;margin-bottom:8px;font-weight:700;font-size:.9em">📌 ${phaseLabels[cat.phase]}</div>`;
+    }
+    const sts=cat.initiatives.map(i=>gIS(i.id));
+    const dn=sts.filter(s=>s.status==='completed').length;
+    const ap=sts.length?Math.round(sts.reduce((a,s)=>a+(s.progress||0),0)/sts.length):0;
+    html+=`<div class="cat-sec"><div class="cat-hdr" onclick="toggleC('${cat.id}')">
+      <div><span>${cat.icon}</span> <strong>${cat.name}</strong>
+      <span style="font-size:.76em;color:var(--text-muted);margin-right:6px">📅 ${cat.dur} (${dn}/${cat.initiatives.length} — ${ap}%)</span></div>
+      <span class="badge">${cat.initiatives.length}</span></div>
+      <div class="cat-body" id="cat-${cat.id}">${cat.initiatives.map(i=>renderI(i)).join('')}</div></div>`;
+  });
+  document.getElementById('catCont').innerHTML=html;
+}
+
+function renderI(init){
+  const s=gIS(init.id),st=gST(init.id),members=gMembers();
+  const pc=s.status==='completed'?'var(--success)':s.status==='delayed'?'var(--danger)':'var(--warning)';
+  const dl=deadlineFor(init),dLeft=dB(new Date(),dl);
+  let dlHint='';
+  if(s.status!=='completed'){
+    if(dLeft<0)dlHint=`<span style="color:var(--danger);font-weight:600">⚠️ تجاوز بـ ${Math.abs(dLeft)} يوم</span>`;
+    else dlHint=`<span>⏰ متبقي ${dLeft} يوم</span>`;
+  }
+  // Assigned members
+  const am=(s.members||[]).map(mid=>members.find(m=>m.id===mid)).filter(Boolean);
+  // Display number - use actual numbering for legislative sub-laws
+  const displayNum = init.id.startsWith('leg-') ? `1.${init.id.split('-')[1]}` : init.num;
+
+  let h=`<div class="init status-${s.status}">
+    <div class="ih"><span class="inum">${displayNum}</span><div class="ititle">${init.name}</div><span class="ist ${s.status}">${SL[s.status]}</span></div>`;
+  if(init.desc)h+=`<div style="font-size:.78em;color:var(--text-muted);margin-top:4px;padding-right:26px">${init.desc}</div>`;
+  h+=`<div class="imeta"><span>📅 ${init.dur}</span><span>📊 ${s.progress||0}%</span>${dlHint}
+    ${s.deadline?`<span>🎯 موعد: ${fD(s.deadline)}</span>`:''}</div>`;
+  if(am.length)h+=`<div class="init-members">${am.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</div>`;
+  h+=`<div class="ipb"><div class="ipf" style="width:${s.progress||0}%;background:${pc}"></div></div>`;
+  // KPIs
+  h+=`<div class="kpi-sec"><div class="kpi-t">📏 مؤشرات الأداء</div>`;
+  init.kpis.forEach((k,i)=>{
+    const v=(s.kpiValues&&s.kpiValues[i])||'';
+    h+=`<div class="kpi-item">◆ ${k} ${v?`<span class="kpi-val">[${v}]</span>`:''}</div>`;
+  });
+  h+=`</div>`;
+  // Subtasks
+  if(st.length||true){
+    h+=`<div class="subtasks">`;
+    st.forEach((sub,idx)=>{
+      const sdl=sub.deadline?new Date(sub.deadline):null;
+      const sdLeft=sdl?dB(new Date(),sdl):null;
+      const sdCls=sdLeft!==null&&sdLeft<0&&!sub.done?'overdue':'';
+      const subMembers=(sub.members||[]).map(mid=>members.find(m=>m.id===mid)).filter(Boolean);
+      h+=`<div class="subtask ${sub.done?'done':''}">
+        <input type="checkbox" class="st-cb" ${sub.done?'checked':''} onchange="toggleST('${init.id}',${idx})">
+        <span class="st-text">${sub.text}</span>
+        ${subMembers.length?`<span class="st-members">${subMembers.map(m=>`<span class="member-chip">${m.name}</span>`).join('')}</span>`:''}
+        ${sdl?`<span class="st-deadline ${sdCls}">${sdLeft!==null&&sdLeft<0&&!sub.done?'⚠️ تجاوز':'📅'} ${fD(sdl)}</span>`:''}
+        <span class="st-del" onclick="delST('${init.id}',${idx})">✕</span></div>`;
+    });
+    h+=`<button class="btn btn-sm btn-outline" onclick="openStMo('${init.id}')" style="margin-top:4px">+ إضافة فرع</button></div>`;
+  }
+  h+=`<div class="iact">
+    <button class="btn btn-sm btn-primary" onclick="openEdit('${init.id}')">تحديث</button>
+    ${s.status!=='completed'?`<button class="btn btn-sm btn-success" onclick="qDone('${init.id}')">إكمال ✓</button>`:''}
+  </div></div>`;
+  return h;
+}
+
+function toggleC(id){document.getElementById('cat-'+id).classList.toggle('collapsed')}
+
+// ===== SUBTASKS =====
+function toggleST(iid,idx){const st=gST(iid);st[idx].done=!st[idx].done;sST(iid,st);refreshAll()}
+function delST(iid,idx){const st=gST(iid);st.splice(idx,1);sST(iid,st);refreshAll()}
+function openStMo(iid){
+  document.getElementById('stInitId').value=iid;
+  document.getElementById('stText').value='';
+  document.getElementById('stDeadline').value='';
+  const members=gMembers();
+  document.getElementById('stMemSel').innerHTML=members.length?
+    members.map(m=>`<label style="display:block;font-size:.83em;margin:3px 0"><input type="checkbox" class="stMemCb" value="${m.id}"> ${m.name}</label>`).join('')
+    :'<span style="font-size:.82em;color:var(--text-muted)">لا يوجد أعضاء — أضف من تبويب الفريق</span>';
+  document.getElementById('stMo').classList.add('show');
+}
+function closeStMo(){document.getElementById('stMo').classList.remove('show')}
+function saveSubtask(){
+  const iid=document.getElementById('stInitId').value;
+  const text=document.getElementById('stText').value.trim();
+  if(!text)return;
+  const dl=document.getElementById('stDeadline').value;
+  const mems=[...document.querySelectorAll('.stMemCb:checked')].map(c=>parseInt(c.value));
+  const st=gST(iid);
+  st.push({text,deadline:dl||'',members:mems,done:false});
+  sST(iid,st);
+  closeStMo();refreshAll();
+}
+
+// ===== EDIT MODAL =====
+function openEdit(id){
+  const s=gIS(id),init=allI().find(i=>i.id===id),members=gMembers();
+  document.getElementById('emId').value=id;
+  document.getElementById('emTitle').textContent=`تحديث: ${init.name}`;
+  document.getElementById('emStatus').value=s.status;
+  document.getElementById('emProg').value=s.progress||0;
+  document.getElementById('emDeadline').value=s.deadline||'';
+  document.getElementById('emNotes').value=s.notes||'';
+  // Members checkboxes
+  document.getElementById('emMembers').innerHTML=members.length?
+    members.map(m=>`<label style="display:block;font-size:.83em;margin:3px 0"><input type="checkbox" class="emMemCb" value="${m.id}" ${(s.members||[]).includes(m.id)?'checked':''}> ${m.name} ${m.role?`<span style="color:var(--text-muted)">(${m.role})</span>`:''}</label>`).join('')
+    :'<span style="font-size:.82em;color:var(--text-muted)">أضف أعضاء من تبويب الفريق أولاً</span>';
+  // KPI fields
+  let kh='<div style="margin-top:10px"><label style="font-size:.83em;font-weight:600">قيم مؤشرات الأداء</label>';
+  init.kpis.forEach((k,i)=>{
+    const v=(s.kpiValues&&s.kpiValues[i])||'';
+    kh+=`<div style="margin-top:4px"><span style="font-size:.78em;color:var(--text-muted)">◆ ${k}</span>
+      <input type="text" class="kpiEd" data-idx="${i}" value="${v}" placeholder="أدخل القيمة..."
+      style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:.82em;direction:rtl;margin-top:2px"></div>`;
+  });
+  kh+='</div>';
+  document.getElementById('emKpi').innerHTML=kh;
+  document.getElementById('editMo').classList.add('show');
+}
+function closeEdit(){document.getElementById('editMo').classList.remove('show')}
+function saveEdit(){
+  const id=document.getElementById('emId').value;
+  const status=document.getElementById('emStatus').value;
+  const progress=Math.min(100,Math.max(0,parseInt(document.getElementById('emProg').value)||0));
+  const deadline=document.getElementById('emDeadline').value;
+  const notes=document.getElementById('emNotes').value;
+  const members=[...document.querySelectorAll('.emMemCb:checked')].map(c=>parseInt(c.value));
+  const kpiValues={};
+  document.querySelectorAll('.kpiEd').forEach(inp=>{if(inp.value.trim())kpiValues[inp.dataset.idx]=inp.value.trim()});
+  sIS(id,{status,progress,deadline,notes,members,kpiValues});
+  closeEdit();refreshAll();
+}
+function qDone(id){sIS(id,{status:'completed',progress:100});refreshAll()}
+
+// ===== TEAM =====
+function addMember(){
+  const name=document.getElementById('tmName').value.trim();
+  if(!name)return;
+  const role=document.getElementById('tmRole').value.trim();
+  const ms=gMembers();
+  ms.push({id:Date.now(),name,role});
+  sMembers(ms);
+  document.getElementById('tmName').value='';
+  document.getElementById('tmRole').value='';
+  refreshAll();
+}
+function removeMember(mid){
+  sMembers(gMembers().filter(m=>m.id!==mid));
+  // Clean references
+  allI().forEach(init=>{
+    const s=gIS(init.id);
+    if(s.members&&s.members.includes(mid)){s.members=s.members.filter(x=>x!==mid);sIS(init.id,s)}
+    const st=gST(init.id);let changed=false;
+    st.forEach(sub=>{if(sub.members&&sub.members.includes(mid)){sub.members=sub.members.filter(x=>x!==mid);changed=true}});
+    if(changed)sST(init.id,st);
+  });
+  refreshAll();
+}
+function renderTeam(){
+  const ms=gMembers();
+  if(!ms.length){
+    document.getElementById('teamGrid').innerHTML='<div style="text-align:center;padding:20px;color:var(--text-muted)">لا يوجد أعضاء — أضف أعضاء الفريق أعلاه</div>';
+    return;
+  }
+  document.getElementById('teamGrid').innerHTML=ms.map(m=>{
+    // Find all tasks for this member
+    const tasks=[];
+    allI().forEach(init=>{
+      const s=gIS(init.id);
+      if((s.members||[]).includes(m.id))tasks.push({type:'مبادرة',text:init.name,status:s.status,done:s.status==='completed'});
+      gST(init.id).forEach(sub=>{
+        if((sub.members||[]).includes(m.id))tasks.push({type:'فرع',text:sub.text,done:sub.done});
+      });
+    });
+    gTasks().forEach(t=>{
+      if(t.member===m.id)tasks.push({type:'مهمة',text:t.text,done:t.done});
+    });
+    const pending=tasks.filter(t=>!t.done).length;
+    const completed=tasks.filter(t=>t.done).length;
+    return `<div class="team-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div class="team-name">👤 ${m.name}</div>${m.role?`<div class="team-role">${m.role}</div>`:''}</div>
+        <button class="btn btn-sm btn-danger" onclick="removeMember(${m.id})" title="حذف">✕</button>
+      </div>
+      <div style="font-size:.8em;margin-top:6px;color:var(--text-muted)">${pending} قيد التنفيذ | ${completed} مكتمل</div>
+      <div class="team-tasks">
+        ${tasks.length?tasks.filter(t=>!t.done).slice(0,8).map(t=>`<div class="team-task-item">${t.done?'✅':'⏳'} <strong>[${t.type}]</strong> ${t.text}</div>`).join('')
+          +(tasks.filter(t=>!t.done).length>8?`<div style="color:var(--text-muted);font-size:.78em">...و ${tasks.filter(t=>!t.done).length-8} مهام أخرى</div>`:'')
+        :'<div style="color:var(--text-muted);font-size:.8em">لا توجد مهام مسندة</div>'}
+      </div>
+    </div>`;
+  }).join('');
+  // Update task member dropdown
+  const sel=document.getElementById('taskMember');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">بدون إسناد</option>'+ms.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  sel.value=cur;
+}
+
+// ===== TASKS =====
+function addTask(){
+  const inp=document.getElementById('taskInp'),text=inp.value.trim();if(!text)return;
+  const ts=gTasks();
+  const mem=document.getElementById('taskMember').value;
+  ts.unshift({id:Date.now(),text,priority:document.getElementById('taskPri').value,category:document.getElementById('taskCat').value||'عام',member:mem?parseInt(mem):null,done:false});
+  sTasks(ts);inp.value='';renderTasks();
+}
+function toggleTask(id){const ts=gTasks();const f=ts.find(x=>x.id===id);if(f)f.done=!f.done;sTasks(ts);renderTasks()}
+function deleteTask(id){sTasks(gTasks().filter(t=>t.id!==id));renderTasks()}
+let tF='all';
+function renderTasks(){
+  let ts=gTasks();const members=gMembers();
+  if(tF==='pending')ts=ts.filter(t=>!t.done);else if(tF==='done')ts=ts.filter(t=>t.done);
+  const el=document.getElementById('taskList');
+  if(!ts.length){el.innerHTML='<div style="text-align:center;padding:16px;color:var(--text-muted)">لا توجد مهام</div>';return}
+  el.innerHTML=ts.map(t=>{
+    const mem=t.member?members.find(m=>m.id===t.member):null;
+    return `<div class="task-item ${t.done?'done':''}">
+      <input type="checkbox" class="task-cb" ${t.done?'checked':''} onchange="toggleTask(${t.id})">
+      <span class="task-text">${t.text}</span>
+      ${mem?`<span class="member-chip">${mem.name}</span>`:''}
+      <span class="task-pri ${t.priority}">${t.priority==='high'?'عاجل':t.priority==='medium'?'متوسط':'عادي'}</span>
+      <span style="font-size:.68em;color:var(--text-muted)">${t.category||''}</span>
+      <span class="task-del" onclick="deleteTask(${t.id})">✕</span></div>`;
+  }).join('');
+}
+
+
+// ===== QUARTERLY REPORTS =====
+function reportPeriods(){
+  const arr=[];
+  let start=new Date(LD);
+  for(let i=1;i<=12;i++){
+    const end=addM(LD,i*3);
+    arr.push({id:'q'+i,num:i,start:new Date(start),end:new Date(end),title:`التقرير ${i} — من ${fD(start)} إلى ${fD(end)}`});
+    start=new Date(end);
+  }
+  return arr;
+}
+function initReports(){
+  const sel=document.getElementById('reportSel');
+  if(!sel)return;
+  const periods=reportPeriods();
+  sel.innerHTML=periods.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');
+  const now=new Date();
+  const current=periods.find(p=>now<=p.end)||periods[periods.length-1];
+  sel.value=current.id;
+  sel.addEventListener('change',renderReportTab);
+  renderReportTab();
+}
+function reportSnapshot(){
+  return allI().map(init=>{
+    const s=gIS(init.id);
+    const dn=init.id.startsWith('leg-')?`1.${init.id.split('-')[1]}`:init.num;
+    return {id:init.id,num:dn,name:init.name,status:s.status,progress:s.progress||0,notes:s.notes||'',deadline:s.deadline||'',kpiValues:s.kpiValues||{}};
+  });
+}
+function previousReport(id){
+  const n=parseInt(id.replace('q',''));
+  if(n<=1)return null;
+  return gReports()['q'+(n-1)]||null;
+}
+function generateReport(){
+  const sel=document.getElementById('reportSel');
+  const id=sel.value;
+  const period=reportPeriods().find(p=>p.id===id);
+  const reports=gReports();
+  const snap=reportSnapshot();
+  reports[id]={id,period,createdAt:new Date().toISOString(),snapshot:snap,customNotes:(reports[id]&&reports[id].customNotes)||''};
+  sReports(reports);
+  renderReportTab();
+}
+function saveReportNotes(){
+  const id=document.getElementById('reportSel').value;
+  const reports=gReports();
+  if(!reports[id]){
+    const period=reportPeriods().find(p=>p.id===id);
+    reports[id]={id,period,createdAt:new Date().toISOString(),snapshot:reportSnapshot(),customNotes:''};
+  }
+  reports[id].customNotes=document.getElementById('reportCustomNotes').value;
+  reports[id].updatedAt=new Date().toISOString();
+  sReports(reports);
+  renderReportPreview(reports[id]);
+}
+function splitReportItems(rep){
+  const snap=(rep&&rep.snapshot)||reportSnapshot();
+  const completed=snap.filter(x=>x.status==='completed'||x.progress>=100);
+  const partial=snap.filter(x=>x.progress>0&&x.progress<100&&x.status!=='completed');
+  const delayed=snap.filter(x=>x.status==='delayed');
+  const notStarted=snap.filter(x=>x.progress===0&&x.status==='not-started');
+  return {snap,completed,partial,delayed,notStarted};
+}
+function newSincePrevious(rep){
+  const prev=previousReport(rep.id);
+  if(!prev)return {completed:splitReportItems(rep).completed,partial:splitReportItems(rep).partial,hasPrev:false};
+  const prevMap=new Map((prev.snapshot||[]).map(x=>[x.id,x]));
+  const cur=splitReportItems(rep);
+  const completed=cur.completed.filter(x=>{
+    const p=prevMap.get(x.id);return !p||!(p.status==='completed'||p.progress>=100);
+  });
+  const partial=cur.partial.filter(x=>{
+    const p=prevMap.get(x.id);return !p||x.progress>(p.progress||0)||x.status!==p.status;
+  });
+  return {completed,partial,hasPrev:true};
+}
+function renderReportTab(){
+  const id=document.getElementById('reportSel').value;
+  const reports=gReports();
+  let rep=reports[id];
+  if(!rep){
+    const period=reportPeriods().find(p=>p.id===id);
+    rep={id,period,createdAt:null,snapshot:reportSnapshot(),customNotes:''};
+  }
+  const parts=splitReportItems(rep), fresh=newSincePrevious(rep);
+  const pct=parts.snap.length?Math.round(parts.snap.reduce((a,x)=>a+(x.progress||0),0)/parts.snap.length):0;
+  document.getElementById('reportStatus').textContent=rep.createdAt?`آخر توليد محفوظ: ${new Date(rep.createdAt).toLocaleString('ar-KW')}`:'لم يتم حفظ لقطة لهذا التقرير بعد — المعروض معاينة من الحالة الحالية.';
+  document.getElementById('reportCustomNotes').value=rep.customNotes||'';
+  document.getElementById('reportSummary').innerHTML=`
+    <div class="report-grid">
+      <div class="report-stat"><div class="num">${parts.completed.length}</div><div class="lbl">مبادرات مكتملة تراكميًا</div></div>
+      <div class="report-stat"><div class="num">${parts.partial.length}</div><div class="lbl">مبادرات منجزة جزئيًا</div></div>
+      <div class="report-stat"><div class="num">${fresh.completed.length}</div><div class="lbl">مكتملة منذ التقرير السابق</div></div>
+      <div class="report-stat"><div class="num">${fresh.partial.length}</div><div class="lbl">تقدم جديد/جزئي منذ السابق</div></div>
+      <div class="report-stat"><div class="num">${pct}%</div><div class="lbl">متوسط الإنجاز الكلي</div></div>
+    </div>
+    <div class="report-section"><h3>الإنجازات المستجدة منذ التقرير السابق</h3>
+      <ol class="report-list">${[...fresh.completed.map(x=>`<li><strong>${x.num} — ${x.name}</strong>: مكتملة (${x.progress}%).</li>`),...fresh.partial.map(x=>`<li><strong>${x.num} — ${x.name}</strong>: إنجاز جزئي (${x.progress}%) — ${SL[x.status]}.</li>`)].join('')||'<li>لا توجد إنجازات مستجدة محفوظة مقارنة بالتقرير السابق.</li>'}</ol>
+    </div>
+    <div class="report-section"><h3>ملخص الإنجاز التراكمي</h3>
+      <ol class="report-list">${parts.completed.map(x=>`<li><strong>${x.num} — ${x.name}</strong>: مكتملة.</li>`).join('')||'<li>لا توجد مبادرات مكتملة حتى الآن.</li>'}</ol>
+    </div>`;
+  renderReportPreview(rep);
+}
+function reportText(rep){
+  const parts=splitReportItems(rep), fresh=newSincePrevious(rep);
+  const pct=parts.snap.length?Math.round(parts.snap.reduce((a,x)=>a+(x.progress||0),0)/parts.snap.length):0;
+  const period=rep.period||reportPeriods().find(p=>p.id===rep.id);
+  const lines=[];
+  lines.push('تقرير متابعة البرنامج الحكومي لحماية الأسرة');
+  lines.push(period?period.title:'');
+  lines.push('');
+  lines.push(`تاريخ إعداد التقرير: ${new Date().toLocaleDateString('ar-KW')}`);
+  lines.push(`متوسط الإنجاز الكلي: ${pct}%`);
+  lines.push(`المبادرات المكتملة تراكميًا: ${parts.completed.length}`);
+  lines.push(`المبادرات ذات الإنجاز الجزئي: ${parts.partial.length}`);
+  lines.push('');
+  lines.push('أولًا: الإنجازات المستجدة منذ التقرير السابق');
+  const freshItems=[...fresh.completed.map(x=>`- ${x.num} — ${x.name}: مكتملة بنسبة ${x.progress}%.`),...fresh.partial.map(x=>`- ${x.num} — ${x.name}: إنجاز جزئي بنسبة ${x.progress}% (${SL[x.status]}).`)];
+  lines.push(...(freshItems.length?freshItems:['- لا توجد إنجازات مستجدة محفوظة مقارنة بالتقرير السابق.']));
+  lines.push('');
+  lines.push('ثانيًا: الملخص التراكمي لما تم إنجازه');
+  lines.push(...(parts.completed.length?parts.completed.map(x=>`- ${x.num} — ${x.name}: مكتملة.`):['- لا توجد مبادرات مكتملة حتى الآن.']));
+  if(parts.partial.length){
+    lines.push('');
+    lines.push('ثالثًا: المبادرات ذات الإنجاز الجزئي');
+    lines.push(...parts.partial.map(x=>`- ${x.num} — ${x.name}: ${x.progress}% (${SL[x.status]}).${x.notes?' ملاحظة: '+x.notes:''}`));
+  }
+  if(rep.customNotes){lines.push('');lines.push('ملاحظات تحريرية:');lines.push(rep.customNotes)}
+  return lines.filter(x=>x!==undefined).join('\n');
+}
+function renderReportPreview(rep){document.getElementById('reportPreview').textContent=reportText(rep)}
+function copyReportText(){
+  const txt=document.getElementById('reportPreview').textContent;
+  navigator.clipboard?.writeText(txt).then(()=>alert('تم نسخ نص التقرير')).catch(()=>alert('تعذر النسخ تلقائيًا — يمكنك تحديد النص ونسخه يدويًا'));
+}
+function downloadReportText(){
+  const id=document.getElementById('reportSel').value;
+  const txt=document.getElementById('reportPreview').textContent;
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`تقرير_البرنامج_الحكومي_${id}.txt`;a.click();URL.revokeObjectURL(a.href);
+}
+
+// ===== KPI SUMMARY =====
+function renderKpiSumm(){
+  let h='';
+  CATS.forEach(cat=>{
+    h+=`<div style="margin-bottom:14px"><h3>${cat.icon} ${cat.name}</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:.8em">
+    <tr style="background:var(--primary);color:#fff"><th style="padding:5px 6px;text-align:right">م</th><th style="padding:5px 6px;text-align:right">المبادرة</th><th style="padding:5px 6px;text-align:right">المدة</th><th style="padding:5px 6px;text-align:right">مؤشرات الأداء</th><th style="padding:5px 6px;text-align:center">الحالة</th><th style="padding:5px 6px;text-align:center">%</th></tr>`;
+    cat.initiatives.forEach(init=>{
+      const s=gIS(init.id);
+      const bg=s.status==='completed'?'#eafaf1':s.status==='delayed'?'#fdedec':s.status==='in-progress'?'#fef9e7':'#fff';
+      const dn=init.id.startsWith('leg-')?`1.${init.id.split('-')[1]}`:init.num;
+      h+=`<tr style="background:${bg};border-bottom:1px solid var(--border)">
+        <td style="padding:5px 6px;font-weight:600">${dn}</td>
+        <td style="padding:5px 6px">${init.name}</td>
+        <td style="padding:5px 6px;white-space:nowrap">${init.dur}</td>
+        <td style="padding:5px 6px">${init.kpis.join(' — ')}</td>
+        <td style="padding:5px 6px;text-align:center"><span class="ist ${s.status}" style="font-size:.82em">${SL[s.status]}</span></td>
+        <td style="padding:5px 6px;text-align:center;font-weight:600">${s.progress||0}%</td></tr>`;
+    });
+    h+='</table></div>';
+  });
+  document.getElementById('kpiSumm').innerHTML=h;
+}
+
+// ===== TIMELINE =====
+function renderTL(){
+  const evts=[];
+  evts.push({date:LD,title:'🚀 إطلاق البرنامج الحكومي',desc:'12 مايو 2026'});
+  PHASES.forEach(p=>evts.push({date:addM(LD,p.endM),title:`نهاية المدة القصوى: ${p.name}`,desc:p.sub}));
+  allI().forEach(init=>{
+    const s=gIS(init.id);
+    if(s.status==='completed')evts.push({date:new Date(),title:`✅ ${init.name}`,desc:`مبادرة ${init.num}`});
+  });
+  evts.push({date:PE,title:'🏁 نهاية البرنامج',desc:'مايو 2029'});
+  evts.sort((a,b)=>a.date-b.date);
+  const now=new Date();
+  document.getElementById('tlCont').innerHTML=evts.map(e=>{
+    let cls=e.date<=now?'done':'';
+    return `<div class="tl-item ${cls}"><div class="tl-date">${fD(e.date)}</div><div class="tl-title">${e.title}</div>${e.desc?`<div class="tl-desc">${e.desc}</div>`:''}</div>`;
+  }).join('');
+}
+
+// ===== NOTES =====
+function initNotes(){
+  const a=document.getElementById('notesArea');a.value=gNotes();
+  a.addEventListener('input',()=>{sNotes(a.value);document.getElementById('notesST').textContent=new Date().toLocaleTimeString('ar-KW')});
+}
+
+
+
+// ===== VIEWER DATA LOADER =====
+async function loadPublishedData(){
+  try{
+    const res=await fetch('data.json?ts='+Date.now(),{cache:'no-store'});
+    if(!res.ok)throw new Error('data.json not found');
+    const payload=await res.json();
+    if(payload&&payload.state){
+      Object.keys(payload.state).forEach(k=>localStorage.setItem(k,payload.state[k]));
+    }
+    const el=document.getElementById('viewerUpdatedAt');
+    if(el)el.textContent=payload.updatedAt?new Date(payload.updatedAt).toLocaleString('ar-KW'):'غير محدد';
+  }catch(e){
+    const el=document.getElementById('viewerUpdatedAt');
+    if(el)el.textContent='لا يوجد data.json منشور بعد';
+  }
+}
+
+// ===== PUBLISH EXPORT =====
+function collectPublishData(){
+  const state={};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key&&key.startsWith(K))state[key]=localStorage.getItem(key);
+  }
+  return {program:'البرنامج الحكومي لحماية الأسرة',version:'viewer-data-1',updatedAt:new Date().toISOString(),state};
+}
+function exportPublishData(){
+  const payload=collectPublishData();
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='data.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ===== TIMER =====
+function updateTimer(){
+  const now=new Date(),diff=PE-now;
+  if(diff<=0){document.getElementById('mainTimer').textContent='انتهت مدة البرنامج';return}
+  const d=Math.floor(diff/864e5),h=Math.floor(diff%864e5/36e5),el=dB(LD,now);
+  document.getElementById('mainTimer').textContent=`مضى ${el} يوم | متبقي ${d} يوم و ${h} ساعة`;
+}
+
+// ===== TABS =====
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tc').forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+    if(tab.dataset.tab==='timeline')renderTL();
+    if(tab.dataset.tab==='kpis')renderKpiSumm();
+    if(tab.dataset.tab==='team')renderTeam();
+    if(tab.dataset.tab==='reports')renderReportTab();
+  });
+});
+document.querySelectorAll('.tf').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tf').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');tF=btn.dataset.f;renderTasks();
+  });
+});
+document.getElementById('taskInp').addEventListener('keypress',e=>{if(e.key==='Enter')addTask()});
+
+
+function applyViewerLocks(){
+  // Keep read-only dashboard visually complete while preventing changes.
+  document.querySelectorAll('.viewer-only input[type="checkbox"]').forEach(el=>{el.disabled=true});
+  document.querySelectorAll('.viewer-only textarea').forEach(el=>{el.readOnly=true});
+  document.querySelectorAll('.viewer-only #notesArea').forEach(el=>{el.readOnly=true});
+  document.querySelectorAll('.viewer-only #reportCustomNotes').forEach(el=>{el.readOnly=true});
+  // Report selection is allowed for viewing different saved quarters.
+  const reportSel=document.querySelector('.viewer-only #reportSel');
+  if(reportSel)reportSel.disabled=false;
+  // Hide only the button that changes/saves a report snapshot. Keep copy/download as view utilities.
+  document.querySelectorAll('.viewer-only #tab-reports button').forEach(btn=>{
+    if((btn.textContent||'').includes('توليد')||(btn.getAttribute('onclick')||'').includes('generateReport'))btn.classList.add('viewer-hidden');
+  });
+}
+
+function refreshAll(){renderStats();renderPhases();renderAlerts();renderCats();renderTasks();renderTeam();if(document.getElementById('reportSel'))renderReportTab();updateTimer();
+  document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ar-KW',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  if(document.body.classList.contains('viewer-only'))applyViewerLocks();
+}
+loadPublishedData().then(()=>{refreshAll();initNotes();initReports();setInterval(updateTimer,6e4);});
+</script>
+</body>
+</html>

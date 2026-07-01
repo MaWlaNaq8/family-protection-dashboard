@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة متابعة البرنامج الحكومي لحماية الأسرة — عرض للفريق</title>
+<title>لوحة متابعة البرنامج الحكومي لحماية الأسرة</title>
 <style>
 :root{color-scheme:light;--primary:#1a5276;--primary-light:#2980b9;--success:#27ae60;--warning:#f39c12;--danger:#e74c3c;--info:#3498db;--bg:#f5f7fa;--card:#fff;--text:#2c3e50;--text-muted:#7f8c8d;--border:#e0e6ed;--shadow:0 2px 12px rgba(0,0,0,.08)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -113,16 +113,9 @@ h1{font-size:1.3em;color:var(--primary)}h2{font-size:1.05em;color:var(--primary)
 .dal{background:#fef9e7;border:1px solid #f9e79f;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:.83em}
 .dal.danger{background:#fdedec;border-color:#f5b7b1}
 @media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}.phases-grid{grid-template-columns:1fr}.task-input-row{flex-direction:column}}
-
-/* Viewer mode: keep the dashboard visually close to admin, but remove edit actions */
-.viewer-only .iact,.viewer-only .add-subtask-row,.viewer-only .st-del,.viewer-only .team-card .btn,.viewer-only #tab-tasks .task-input-row,.viewer-only .task-del{display:none!important}
-.viewer-only input[type=checkbox]{pointer-events:none;accent-color:var(--success)}
-.viewer-only textarea,.viewer-only input,.viewer-only select{pointer-events:auto}
-.viewer-only textarea[readonly],.viewer-only input[readonly]{background:#f8fafc;color:var(--text)}
-.viewer-only .viewer-hidden{display:none!important}
 </style>
 </head>
-<body class="viewer-only">
+<body>
 <div class="header">
   <h1>📊 لوحة متابعة البرنامج الحكومي لحماية الأسرة</h1>
   <div class="sub">وزارة العدل — 24 مبادرة | خطة 2026–2029</div>
@@ -132,17 +125,27 @@ h1{font-size:1.3em;color:var(--primary)}h2{font-size:1.05em;color:var(--primary)
     <div>🚀 تاريخ الإطلاق: 12 مايو 2026</div>
   </div>
 </div>
-<div class="dal" style="background:#eafaf1;border-color:#abebc6">
-  👁️ هذه نسخة عرض فقط للفريق. آخر تحديث: <strong id="viewerUpdatedAt">—</strong>
-</div>
 <div id="alerts"></div>
 <div class="stats-row" id="statsRow"></div>
 <div class="card"><h2>⏳ مراحل التنفيذ</h2><div class="phases-grid" id="phasesGrid"></div></div>
-<div class="dal" style="background:#fff;border-color:#d6eaf8">📌 اختر من القوائم أعلاه لعرض المبادرات، الفريق، المؤشرات، التقارير، المهام، والمسار الزمني.</div>
+<div class="tabs">
+  <button class="tab active" data-tab="initiatives">📋 المبادرات</button>
+  <button class="tab" data-tab="team">👥 الفريق</button>
+  <button class="tab" data-tab="kpis">📏 ملخص المؤشرات</button>
+  <button class="tab" data-tab="reports">📄 التقارير</button>
+  <button class="tab" data-tab="tasks">✅ المهام</button>
+  <button class="tab" data-tab="timeline">📅 المسار الزمني</button>
+  <button class="tab" data-tab="notes">📝 ملاحظات</button>
+</div>
+<div class="tc active" id="tab-initiatives"><div id="catCont"></div></div>
 <div class="tc" id="tab-team">
   <div class="card">
     <h2>👥 إدارة فريق العمل</h2>
-    
+    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+      <input id="tmName" placeholder="اسم العضو" style="flex:1;min-width:120px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl">
+      <input id="tmRole" placeholder="المسمى الوظيفي (اختياري)" style="flex:1;min-width:120px;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:.83em;direction:rtl">
+      <button class="btn btn-primary" onclick="addMember()">إضافة عضو</button>
+    </div>
     <div class="team-grid" id="teamGrid"></div>
   </div>
 </div>
@@ -835,24 +838,6 @@ function initNotes(){
 }
 
 
-
-// ===== VIEWER DATA LOADER =====
-async function loadPublishedData(){
-  try{
-    const res=await fetch('data.json?ts='+Date.now(),{cache:'no-store'});
-    if(!res.ok)throw new Error('data.json not found');
-    const payload=await res.json();
-    if(payload&&payload.state){
-      Object.keys(payload.state).forEach(k=>localStorage.setItem(k,payload.state[k]));
-    }
-    const el=document.getElementById('viewerUpdatedAt');
-    if(el)el.textContent=payload.updatedAt?new Date(payload.updatedAt).toLocaleString('ar-KW'):'غير محدد';
-  }catch(e){
-    const el=document.getElementById('viewerUpdatedAt');
-    if(el)el.textContent='لا يوجد data.json منشور بعد';
-  }
-}
-
 // ===== PUBLISH EXPORT =====
 function collectPublishData(){
   const state={};
@@ -901,27 +886,10 @@ document.querySelectorAll('.tf').forEach(btn=>{
 });
 document.getElementById('taskInp').addEventListener('keypress',e=>{if(e.key==='Enter')addTask()});
 
-
-function applyViewerLocks(){
-  // Keep read-only dashboard visually complete while preventing changes.
-  document.querySelectorAll('.viewer-only input[type="checkbox"]').forEach(el=>{el.disabled=true});
-  document.querySelectorAll('.viewer-only textarea').forEach(el=>{el.readOnly=true});
-  document.querySelectorAll('.viewer-only #notesArea').forEach(el=>{el.readOnly=true});
-  document.querySelectorAll('.viewer-only #reportCustomNotes').forEach(el=>{el.readOnly=true});
-  // Report selection is allowed for viewing different saved quarters.
-  const reportSel=document.querySelector('.viewer-only #reportSel');
-  if(reportSel)reportSel.disabled=false;
-  // Hide only the button that changes/saves a report snapshot. Keep copy/download as view utilities.
-  document.querySelectorAll('.viewer-only #tab-reports button').forEach(btn=>{
-    if((btn.textContent||'').includes('توليد')||(btn.getAttribute('onclick')||'').includes('generateReport'))btn.classList.add('viewer-hidden');
-  });
-}
-
 function refreshAll(){renderStats();renderPhases();renderAlerts();renderCats();renderTasks();renderTeam();if(document.getElementById('reportSel'))renderReportTab();updateTimer();
   document.getElementById('todayDate').textContent=new Date().toLocaleDateString('ar-KW',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  if(document.body.classList.contains('viewer-only'))applyViewerLocks();
 }
-loadPublishedData().then(()=>{refreshAll();initNotes();initReports();setInterval(updateTimer,6e4);});
+refreshAll();initNotes();initReports();setInterval(updateTimer,6e4);
 </script>
 </body>
 </html>

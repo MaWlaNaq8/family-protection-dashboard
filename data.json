@@ -1,6 +1,11 @@
 {
   "program": "البرنامج الحكومي لحماية الأسرة",
   "version": "viewer-data-1",
-  "updatedAt": null,
-  "state": {}
+  "updatedAt": "2026-07-01T18:06:12.656Z",
+  "state": {
+    "fp3_i_leg-1": "{\"status\":\"completed\",\"progress\":100,\"notes\":\"\",\"kpiValues\":{},\"deadline\":\"\",\"members\":[]}",
+    "fp3_i_leg-4": "{\"status\":\"completed\",\"progress\":100,\"notes\":\"\",\"kpiValues\":{},\"deadline\":\"\",\"members\":[]}",
+    "fp3_i_awa-1": "{\"status\":\"not-started\",\"progress\":40,\"notes\":\"\",\"kpiValues\":{},\"deadline\":\"\",\"members\":[]}",
+    "fp3_members": "[{\"id\":1782929080919,\"name\":\"عبدالله الملا\",\"role\":\"عضو المكتب الفني\"}]"
+  }
 }

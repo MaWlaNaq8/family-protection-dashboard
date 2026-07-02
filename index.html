@@ -329,17 +329,26 @@ select option{background:var(--panel)}
   .side-foot{display:none}
   .ov-grid{grid-template-columns:1fr}
   .panel.span2{grid-column:auto}
-  .mtop{margin-bottom:12px}
+  .main{overflow-x:hidden}
+  .mtop{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:12px}
+  .mtop-r{width:100%;flex-wrap:wrap}
+  .mchip{flex:1 1 auto;min-width:0}
+  .mchip-v{white-space:normal}
 }
 @media(max-width:560px){
   .stats-row{grid-template-columns:repeat(2,1fr)}
-  .main{padding:16px 14px}
+  .main{padding:16px 14px;overflow-x:hidden}
   .task-input-row{flex-direction:column}
   .igrid{grid-template-columns:1fr}
   .tab{padding:7px 10px;font-size:.8em;gap:7px}
   .view-title{font-size:1.15em}
-  .mtop-r{width:100%}
-  .mchip{flex:1;min-width:0}
+  .mtop{flex-direction:column;align-items:stretch;gap:10px}
+  .mtop-r{width:100%;flex-wrap:wrap}
+  .mchip{flex:1 1 30%;min-width:0}
+  .mchip-v{white-space:normal}
+  .report-toolbar{flex-direction:column;align-items:stretch}
+  .filterbar{flex-direction:column;align-items:stretch}
+  .segmented{overflow-x:auto}
 }
 /* ===== PWA install pill ===== */
 .pwa-install{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:900;display:none;align-items:center;gap:6px;
@@ -350,7 +359,7 @@ select option{background:var(--panel)}
 .pwa-x{background:rgba(4,34,42,.18);border:none;color:#04222A;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:.72em;line-height:1;flex-shrink:0}
 .pwa-x:hover{background:rgba(4,34,42,.32)}
 
-/* ===== VIEWER (read-only) ===== */
+/* VIEWER */
 body.viewer .iact,
 body.viewer .subtasks>.btn,
 body.viewer .task-input-row,
@@ -1378,19 +1387,15 @@ fetch('data.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():{}})
 </div>
 <script>
 (function(){
-  var pill=document.getElementById('pwaInstall'),btn=document.getElementById('pwaBtn'),x=document.getElementById('pwaX'),deferred=null;
-  function standalone(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}
-  function show(){if(!standalone()&&sessionStorage.getItem('pwaHide')!=='1')pill.classList.add('show');}
-  function hide(){pill.classList.remove('show');}
-  x.addEventListener('click',function(){hide();sessionStorage.setItem('pwaHide','1');});
-  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;btn.textContent='📲 تثبيت التطبيق على الهاتف';btn.onclick=function(){if(deferred){deferred.prompt();deferred.userChoice.finally(function(){deferred=null;hide();});}};show();});
-  window.addEventListener('appinstalled',function(){hide();});
-  if(/iphone|ipad|ipod/i.test(navigator.userAgent||'')&&!standalone()){
-    btn.textContent='📲 أضِف إلى الشاشة الرئيسية';
-    btn.onclick=function(){alert('للإضافة على آيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية».');};
-    show();
-  }
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
+  var pill=document.getElementById("pwaInstall"),btn=document.getElementById("pwaBtn"),x=document.getElementById("pwaX"),deferred=null;
+  function standalone(){return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}
+  function show(){if(!standalone()&&sessionStorage.getItem("pwaHide")!=="1")pill.classList.add("show");}
+  function hide(){pill.classList.remove("show");}
+  x.addEventListener("click",function(){hide();sessionStorage.setItem("pwaHide","1");});
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferred=e;btn.onclick=function(){if(deferred){deferred.prompt();deferred.userChoice.finally(function(){deferred=null;hide();});}};show();});
+  window.addEventListener("appinstalled",function(){hide();});
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent||"")&&!standalone()){btn.textContent="📲 أضِف إلى الشاشة الرئيسية";btn.onclick=function(){alert("للإضافة على آيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية».");};show();}
+  if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}
 })();
 </script>
 </body>
